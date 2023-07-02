@@ -102,7 +102,7 @@ class DynamicOnTime : public Component {
     }
 
     // Automation
-    if (this->automation_ == nullptr)
+    if (this->automation_ != nullptr)
       delete this->automation_;
 
     this->automation_ = new Automation<>(this->trigger_);
