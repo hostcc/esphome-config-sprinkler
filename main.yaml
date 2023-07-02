@@ -2,6 +2,7 @@
 # Copyright (c) 2023 Ilia Sotnikov
 ---
 substitutions:
+  base_path: .
   run_duration_uom: s
   run_duration_initial_value: '5'
   refill_tank_relay_id: relay_7
