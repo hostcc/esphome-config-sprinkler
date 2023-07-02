@@ -46,7 +46,7 @@ font:
       - "\U0000e16f"  # Link off
 
 interval:
-  - interval: 3s
+  - interval: ${display_page_show_duration}
     then:
       - if:
           condition:

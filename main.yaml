@@ -10,9 +10,11 @@ substitutions:
   valve_overlap: 1s
   pump_start_pump_delay: 1s
   pump_stop_valve_delay: 1s
+  refill_relay_pulse_duration: 3s
   led_id: led
   display_backlight_id: display1_backlight
   display_page_when_active: display_page1
+  display_page_show_duration: 3s
 
 packages:
   outputs: !include outputs.yaml

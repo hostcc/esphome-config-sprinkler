@@ -12,6 +12,6 @@ if:
   then:
     - sprinkler.pause: ${sprinkler}
     - switch.turn_on: ${relay}
-    - delay: 3s
+    - delay: ${refill_relay_pulse_duration}
     - switch.turn_off: ${relay}
     - sprinkler.resume: ${sprinkler}

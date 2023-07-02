@@ -36,7 +36,7 @@ text_sensor:
       };
 
       return {"N/A"};
-    update_interval: 1s
+    update_interval: 1${run_duration_uom}
   - platform: template
     id: flowerbed_sprinklers_state
     entity_category: diagnostic
@@ -64,12 +64,12 @@ text_sensor:
       };
 
       return {"N/A"};
-    update_interval: 1s
+    update_interval: 1${run_duration_uom}
   - platform: template
     entity_category: diagnostic
     id: pump_state
     name: "Pump state"
-    update_interval: 1s
+    update_interval: 1${run_duration_uom}
     lambda: |-
       if (${pump_relay_id}->state) {
         return { "Active" };
@@ -79,7 +79,7 @@ text_sensor:
     entity_category: diagnostic
     id: tank_refill_state
     name: "Tank refill state"
-    update_interval: 1s
+    update_interval: 1${run_duration_uom}
     lambda: |-
       if (${refill_tank_relay_id}->state) {
         return { "Active" };
