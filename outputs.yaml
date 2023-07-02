@@ -39,11 +39,6 @@ switch:
     name: Buzzer
     output: buzzer
     entity_category: config
-  - platform: gpio
-    pin: GPIO22
-    internal: true
-    id: display1_backlight
-    inverted: true
 
 output:
   - platform: rp2040_pwm
