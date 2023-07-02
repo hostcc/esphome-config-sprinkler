@@ -1,0 +1,118 @@
+---
+sprinkler:
+  - id: lawn_sprinklers
+    main_switch:
+      name: "Lawn sprinklers"
+      id: lawn_sprinklers_main_switch
+      on_turn_on:
+        - display.page.show: ${display_page_when_active}
+        - light.turn_on: ${led_id}
+        - switch.turn_on: ${display_backlight_id}
+      on_turn_off:
+        - light.turn_off: ${led_id}
+        - switch.turn_off: ${display_backlight_id}
+    auto_advance_switch: "Lawn sprinklers Auto Advance"
+    standby_switch:
+      name: "Pause lawn sprinklers"
+      id: lawn_sprinklers_standby_switch
+      internal: true
+    valve_overlap: ${valve_overlap}
+    pump_start_pump_delay: ${pump_start_pump_delay}
+    pump_stop_valve_delay: ${pump_stop_valve_delay}
+    valves:
+      - valve_switch:
+          name: "South lawn"
+          on_turn_off: !include
+            file: script_refill_tank.yaml
+            vars:
+              sprinkler: lawn_sprinklers
+              relay: ${refill_tank_relay_id}
+        enable_switch: "Enable south lawn"
+        run_duration_number:
+          name: "South lawn run duration"
+          initial_value: ${run_duration_initial_value}
+          restore_value: true
+          unit_of_measurement: ${run_duration_uom}
+        valve_switch_id: relay_1
+        pump_switch_id: ${pump_relay_id}
+      - valve_switch:
+          name: "North lawn"
+          on_turn_off: !include
+            file: script_refill_tank.yaml
+            vars:
+              sprinkler: lawn_sprinklers
+              relay: ${refill_tank_relay_id}
+        enable_switch: "Enable north lawn"
+        run_duration_number:
+          name: "North lawn run duration"
+          initial_value: ${run_duration_initial_value}
+          restore_value: true
+          unit_of_measurement: ${run_duration_uom}
+        valve_switch_id: relay_2
+        pump_switch_id: ${pump_relay_id}
+      - valve_switch:
+          name: "West lawn"
+          on_turn_off: !include
+            file: script_refill_tank.yaml
+            vars:
+              sprinkler: lawn_sprinklers
+              relay: ${refill_tank_relay_id}
+        enable_switch: "Enable west lawn"
+        run_duration_number:
+          name: "West lawn run duration"
+          initial_value: ${run_duration_initial_value}
+          restore_value: true
+          unit_of_measurement: ${run_duration_uom}
+        valve_switch_id: relay_3
+        pump_switch_id: ${pump_relay_id}
+
+  - id: flowerbed_sprinklers
+    main_switch:
+      name: "Flowerbed sprinklers"
+      id: flowerbed_sprinklers_main_switch
+      on_turn_on:
+        - display.page.show: ${display_page_when_active}
+        - light.turn_on: ${led_id}
+        - switch.turn_on: ${display_backlight_id}
+      on_turn_off:
+        - light.turn_off: ${led_id}
+        - switch.turn_off: ${display_backlight_id}
+    auto_advance_switch: "Flowerbed sprinklers Auto Advance"
+    standby_switch:
+      name: "Pause flowerbed sprinklers"
+      id: flowerbed_sprinklers_standby_switch
+      internal: true
+    valve_overlap: ${valve_overlap}
+    pump_start_pump_delay: ${pump_start_pump_delay}
+    pump_stop_valve_delay: ${pump_stop_valve_delay}
+    valves:
+      - valve_switch:
+          name: "South flowerbed"
+          on_turn_off: !include
+            file: script_refill_tank.yaml
+            vars:
+              sprinkler: flowerbed_sprinklers
+              relay: ${refill_tank_relay_id}
+        enable_switch: "Enable south flowerbed"
+        run_duration_number:
+          name: "South flowerbed run duration"
+          initial_value: ${run_duration_initial_value}
+          restore_value: true
+          unit_of_measurement: ${run_duration_uom}
+        valve_switch_id: relay_4
+        pump_switch_id: ${pump_relay_id}
+      - valve_switch:
+          name: "West flowerbed"
+          on_turn_off: !include
+            file: script_refill_tank.yaml
+            vars:
+              sprinkler: flowerbed_sprinklers
+              relay: ${refill_tank_relay_id}
+        enable_switch: "Enable west flowerbed"
+        run_duration_number:
+          name: "West flowerbed"
+          initial_value: ${run_duration_initial_value}
+          restore_value: true
+          unit_of_measurement: ${run_duration_uom}
+        valve_switch_id: relay_5
+        pump_switch_id: ${pump_relay_id}

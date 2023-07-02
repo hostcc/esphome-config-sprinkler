@@ -1,0 +1,74 @@
+---
+binary_sensor:
+  - platform: gpio
+    id: rain_sensor
+    pin:
+      number: GPIO0
+      mode:
+        pullup: true
+        input: true
+      inverted: true
+    name: "Rain sensor"
+    filters:
+      - delayed_on: 100ms
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - switch.turn_on: flowerbed_sprinklers_standby_switch
+        - switch.turn_on: lawn_sprinklers_standby_switch
+        - sprinkler.shutdown: flowerbed_sprinklers
+        - sprinkler.shutdown: lawn_sprinklers
+        - light.turn_on: ${led_id}
+    on_release:
+      then:
+        - switch.turn_off: flowerbed_sprinklers_standby_switch
+        - switch.turn_off: lawn_sprinklers_standby_switch
+        - light.turn_off: ${led_id}
+  - platform: gpio
+    id: water_tank_empty
+    pin:
+      number: GPIO1
+      mode:
+        pullup: true
+        input: true
+      inverted: true
+    name: "Water tank empty"
+    filters:
+      - delayed_on: 100ms
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - sprinkler.pause: flowerbed_sprinklers
+        - sprinkler.pause: lawn_sprinklers
+        - switch.turn_on: flowerbed_sprinklers_standby_switch
+        - switch.turn_on: lawn_sprinklers_standby_switch
+    on_release:
+      then:
+        - switch.turn_off: flowerbed_sprinklers_standby_switch
+        - switch.turn_off: lawn_sprinklers_standby_switch
+        - sprinkler.resume: flowerbed_sprinklers
+        - sprinkler.resume: lawn_sprinklers
+  - platform: gpio
+    internal: true
+    pin:
+      number: GPIO4
+      mode:
+        pullup: true
+        input: true
+      inverted: true
+    name: "Sensor 3"
+    filters:
+      - delayed_on: 100ms
+      - delayed_off: 100ms
+  - platform: gpio
+    internal: true
+    pin:
+      number: GPIO5
+      mode:
+        pullup: true
+        input: true
+      inverted: true
+    name: "Sensor 4"
+    filters:
+      - delayed_on: 100ms
+      - delayed_off: 100ms

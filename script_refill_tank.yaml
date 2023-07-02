@@ -1,0 +1,15 @@
+---
+if:
+  condition:
+    lambda: |-
+      #include "esphome/components/sprinkler/sprinkler.h"
+
+      auto controller = ${sprinkler};
+      return controller->controller_state()
+        != esphome::sprinkler::SprinklerState::IDLE;
+  then:
+    - sprinkler.pause: ${sprinkler}
+    - switch.turn_on: ${relay}
+    - delay: 3s
+    - switch.turn_off: ${relay}
+    - sprinkler.resume: ${sprinkler}

@@ -1,0 +1,97 @@
+---
+sensor:
+  - platform: internal_temperature
+    id: temperature
+    name: "Internal Temperature"
+    entity_category: diagnostic
+    update_interval: 60s
+
+text_sensor:
+  - platform: template
+    id: lawn_sprinklers_state
+    name: "Lawn sprinklers state"
+    entity_category: diagnostic
+    lambda: |-
+      #include <esphome/components/sprinkler/sprinkler.h>
+      auto controller = lawn_sprinklers;
+
+      auto paused_valve = controller->paused_valve();
+      if (paused_valve.has_value()) {
+        char buffer[40];
+        snprintf(
+          buffer, sizeof(buffer), "Paused (%s)",
+          controller->valve_name(paused_valve.value())
+        );
+        return { buffer };
+      }
+
+      switch(controller->controller_state()) {
+        case esphome::sprinkler::SprinklerState::IDLE: return {"Idle"};
+        case esphome::sprinkler::SprinklerState::STARTING: return {"Starting"};
+        case esphome::sprinkler::SprinklerState::ACTIVE: return {"Active"};
+        case esphome::sprinkler::SprinklerState::STOPPING: return {"Stopping"};
+        case esphome::sprinkler::SprinklerState::BYPASS: return {"Bypass"};
+      };
+
+      return {"N/A"};
+    update_interval: 1s
+  - platform: template
+    id: flowerbed_sprinklers_state
+    entity_category: diagnostic
+    name: "Flowerbed sprinklers state"
+    lambda: |-
+      #include <esphome/components/sprinkler/sprinkler.h>
+      auto controller = flowerbed_sprinklers;
+
+      auto paused_valve = controller->paused_valve();
+      if (paused_valve.has_value()) {
+        char buffer[40];
+        snprintf(
+          buffer, sizeof(buffer), "Paused (%s)",
+          controller->valve_name(paused_valve.value())
+        );
+        return { buffer };
+      }
+
+      switch(controller->controller_state()) {
+        case esphome::sprinkler::SprinklerState::IDLE: return {"Idle"};
+        case esphome::sprinkler::SprinklerState::STARTING: return {"Starting"};
+        case esphome::sprinkler::SprinklerState::ACTIVE: return {"Active"};
+        case esphome::sprinkler::SprinklerState::STOPPING: return {"Stopping"};
+        case esphome::sprinkler::SprinklerState::BYPASS: return {"Bypass"};
+      };
+
+      return {"N/A"};
+    update_interval: 1s
+  - platform: template
+    entity_category: diagnostic
+    id: pump_state
+    name: "Pump state"
+    update_interval: 1s
+    lambda: |-
+      if (${pump_relay_id}->state) {
+        return { "Active" };
+      };
+      return { "Idle" };
+  - platform: template
+    entity_category: diagnostic
+    id: tank_refill_state
+    name: "Tank refill state"
+    update_interval: 1s
+    lambda: |-
+      if (${refill_tank_relay_id}->state) {
+        return { "Active" };
+      };
+      return { "Idle" };
+  - platform: template
+    entity_category: diagnostic
+    id: device_time
+    name: "Device time"
+    disabled_by_default: true
+    update_interval: 60s
+    lambda: |-
+      if (!homeassistant_time->now().is_valid()) {
+        return { "Invalid" };
+      };
+
+      return { homeassistant_time->now().strftime("%Y-%m-%d %a %H:%M") };

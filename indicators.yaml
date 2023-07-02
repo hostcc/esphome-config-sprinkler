@@ -1,0 +1,58 @@
+---
+esphome:
+  # Required for 'rp2040_pio_led_strip' component
+  min_version: '2023.6.2'
+
+light:
+  - platform: rp2040_pio_led_strip
+    name: LED
+    internal: true
+    id: ${led_id}
+    pin: GPIO13
+    num_leds: 1
+    pio: 0
+    rgb_order: GRB
+    chipset: WS2812
+    effects:
+      - pulse:
+          name: pulse_1hz
+          transition_length: 1s
+          update_interval: 1s
+      - pulse:
+          name: pulse_2hz
+          transition_length: 0.5s
+          update_interval: 0.5s
+      - pulse:
+          name: pulse_slow
+          transition_length: 2s
+          update_interval: 2s
+    on_turn_on:
+      - lambda: |-
+          #include "esphome/components/sprinkler/sprinkler.h"
+          if (
+            lawn_sprinklers->controller_state()
+              != esphome::sprinkler::SprinklerState::IDLE
+            || flowerbed_sprinklers->controller_state()
+              != esphome::sprinkler::SprinklerState::IDLE
+          ) {
+            auto call = ${led_id}->turn_on();
+            call.set_brightness(0.1);
+            call.set_rgb(0.4, 1.0, 0.9);
+            call.set_effect("pulse_2hz");
+            call.perform();
+            return;
+          };
+          if (rain_sensor->state) {
+            auto call = ${led_id}->turn_on();
+            call.set_brightness(0.1);
+            call.set_rgb(0.4, 1.0, 0.9);
+            call.set_effect("pulse_slow");
+            call.perform();
+            return;
+          };
+          ${led_id}->turn_on();
+
+status_led:
+  pin:
+    number: LED
+    inverted: true
