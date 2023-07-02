@@ -4,11 +4,23 @@
 esphome:
   # Required for HW SPI
   min_version: '2023.6.2'
+  platformio_options:
+    build_flags:
+      # Define the preprocessor macro indicating presence of display so that
+      # dependent code could be conditional
+      - '-DHAS_DISPLAY'
 
 spi:
   clk_pin: GPIO2
   mosi_pin: GPIO3
   force_sw: false
+
+switch:
+  - platform: gpio
+    pin: GPIO22
+    internal: true
+    id: ${display_backlight_id}
+    inverted: true
 
 font:
   - file:
@@ -59,17 +71,19 @@ interval:
                   && flowerbed_sprinklers->controller_state()
                     == esphome::sprinkler::SprinklerState::IDLE;
           then:
-            - display.page.show_next: display1
-            - component.update: display1
+            - display.page.show_next: ${display_id}
+            - component.update: ${display_id}
 
 display:
   - platform: pcd8544
-    id: display1
+    id: ${display_id}
     reset_pin: GPIO7
     cs_pin: GPIO10
     dc_pin: GPIO11
     contrast: 0xff
-    update_interval: 60s
+    # Make display updates each of run duration units, so that it reflects
+    # remaining time accurately
+    update_interval: 1${run_duration_uom}
     pages:
       - id: display_page1
         lambda: |-

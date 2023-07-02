@@ -15,6 +15,7 @@ substitutions:
   display_backlight_id: display1_backlight
   display_page_when_active: display_page1
   display_page_show_duration: 3s
+  display_id: display1
 
 packages:
   outputs: !include outputs.yaml

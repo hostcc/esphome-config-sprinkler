@@ -20,11 +20,19 @@ binary_sensor:
         - switch.turn_on: lawn_sprinklers_standby_switch
         - sprinkler.shutdown: flowerbed_sprinklers
         - sprinkler.shutdown: lawn_sprinklers
+        - lambda: |-
+            #ifdef HAS_DISPLAY
+            ${display_id}->update();
+            #endif
         - light.turn_on: ${led_id}
     on_release:
       then:
         - switch.turn_off: flowerbed_sprinklers_standby_switch
         - switch.turn_off: lawn_sprinklers_standby_switch
+        - lambda: |-
+            #ifdef HAS_DISPLAY
+            ${display_id}->update();
+            #endif
         - light.turn_off: ${led_id}
   - platform: gpio
     id: water_tank_empty
@@ -44,12 +52,20 @@ binary_sensor:
         - sprinkler.pause: lawn_sprinklers
         - switch.turn_on: flowerbed_sprinklers_standby_switch
         - switch.turn_on: lawn_sprinklers_standby_switch
+        - lambda: |-
+            #ifdef HAS_DISPLAY
+            ${display_id}->update();
+            #endif
     on_release:
       then:
         - switch.turn_off: flowerbed_sprinklers_standby_switch
         - switch.turn_off: lawn_sprinklers_standby_switch
         - sprinkler.resume: flowerbed_sprinklers
         - sprinkler.resume: lawn_sprinklers
+        - lambda: |-
+            #ifdef HAS_DISPLAY
+            ${display_id}->update();
+            #endif
   - platform: gpio
     internal: true
     pin:

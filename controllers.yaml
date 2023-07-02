@@ -7,12 +7,18 @@ sprinkler:
       name: "Lawn sprinklers"
       id: lawn_sprinklers_main_switch
       on_turn_on:
-        - display.page.show: ${display_page_when_active}
+        - lambda: |-
+            #ifdef HAS_DISPLAY
+            ${display_id}->show_page(${display_page_when_active});
+            ${display_backlight_id}->turn_on();
+            #endif
         - light.turn_on: ${led_id}
-        - switch.turn_on: ${display_backlight_id}
       on_turn_off:
         - light.turn_off: ${led_id}
-        - switch.turn_off: ${display_backlight_id}
+        - lambda: |-
+            #ifdef HAS_DISPLAY
+            ${display_backlight_id}->turn_off();
+            #endif
     auto_advance_switch: "Lawn sprinklers Auto Advance"
     standby_switch:
       name: "Pause lawn sprinklers"
@@ -73,12 +79,18 @@ sprinkler:
       name: "Flowerbed sprinklers"
       id: flowerbed_sprinklers_main_switch
       on_turn_on:
-        - display.page.show: ${display_page_when_active}
+        - lambda: |-
+            #ifdef HAS_DISPLAY
+            ${display_id}->show_page(${display_page_when_active});
+            ${display_backlight_id}->turn_on();
+            #endif
         - light.turn_on: ${led_id}
-        - switch.turn_on: ${display_backlight_id}
       on_turn_off:
         - light.turn_off: ${led_id}
-        - switch.turn_off: ${display_backlight_id}
+        - lambda: |-
+            #ifdef HAS_DISPLAY
+            ${display_backlight_id}->turn_off();
+            #endif
     auto_advance_switch: "Flowerbed sprinklers Auto Advance"
     standby_switch:
       name: "Pause flowerbed sprinklers"
