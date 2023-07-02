@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2023 Ilia Sotnikov
 ---
 # https://www.waveshare.com/wiki/Pico-Relay-B
 switch:
