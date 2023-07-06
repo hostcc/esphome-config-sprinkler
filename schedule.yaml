@@ -160,6 +160,27 @@ esphome:
 
 custom_component:
   - lambda: |-
+      auto lambdacondition_water_tank_empty
+        = new LambdaCondition<>([=]() -> bool {
+          return !${water_tank_empty_id}->state;
+        });
+
+      auto waituntilaction_water_tank_empty
+        = new WaitUntilAction<>(lambdacondition_water_tank_empty);
+      waituntilaction_water_tank_empty->set_timeout_value(60 * 1000);
+      waituntilaction_water_tank_empty->set_component_source("binary_sensor");
+      App.register_component(waituntilaction_water_tank_empty);
+
+      const std::vector<esphome::Action<> *> actions_flowerbed = {
+        waituntilaction_water_tank_empty,
+        new sprinkler::StartFullCycleAction<>(flowerbed_sprinklers)
+      };
+
+      const std::vector<esphome::Action<> *> actions_lawn = {
+        waituntilaction_water_tank_empty,
+        new sprinkler::StartFullCycleAction<>(lawn_sprinklers)
+      };
+
       auto lawn_sprinklers_on_time = new DynamicOnTime(
         "lawn_sprinklers_on_time",
         id(homeassistant_time),
@@ -172,7 +193,7 @@ custom_component:
         id(lawn_sprinklers_fri),
         id(lawn_sprinklers_sat),
         id(lawn_sprinklers_sun),
-        new sprinkler::StartFullCycleAction<>(lawn_sprinklers)
+        actions_lawn
       );
       auto flowerbed_sprinklers_on_time = new DynamicOnTime(
         "flowerbed_sprinklers_on_time",
@@ -186,7 +207,7 @@ custom_component:
         id(flowerbed_sprinklers_fri),
         id(flowerbed_sprinklers_sat),
         id(flowerbed_sprinklers_sun),
-        new sprinkler::StartFullCycleAction<>(flowerbed_sprinklers)
+        actions_flowerbed
       );
 
       return {
