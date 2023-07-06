@@ -92,7 +92,7 @@ display:
 
           it.strftime(
             0, 0, primary, TextAlign::TOP_LEFT, "%a %H:%M",
-            homeassistant_time->now()
+            ${rtc_id}->now()
           );
 
           it.printf(

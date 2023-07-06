@@ -183,7 +183,7 @@ custom_component:
 
       auto lawn_sprinklers_on_time = new DynamicOnTime(
         "lawn_sprinklers_on_time",
-        id(homeassistant_time),
+        id(${rtc_id}),
         id(lawn_sprinklers_hour),
         id(lawn_sprinklers_minute),
         id(lawn_sprinklers_mon),
@@ -197,7 +197,7 @@ custom_component:
       );
       auto flowerbed_sprinklers_on_time = new DynamicOnTime(
         "flowerbed_sprinklers_on_time",
-        id(homeassistant_time),
+        id(${rtc_id}),
         id(flowerbed_sprinklers_hour),
         id(flowerbed_sprinklers_minute),
         id(flowerbed_sprinklers_mon),
