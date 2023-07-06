@@ -29,6 +29,7 @@ font:
       weight: regular
     id: primary
     size: 14
+    glyphs: '+-:.°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz'
   - file:
       type: gfonts
       family: Material Symbols Outlined
@@ -52,10 +53,11 @@ font:
       family: Material Symbols Outlined
       weight: regular
     id: material_small
-    size: 14
+    size: 13
     glyphs:
       - "\U0000e157"  # Link
       - "\U0000e16f"  # Link off
+      - "\U0000e425"  # Timer
 
 interval:
   - interval: ${display_page_show_duration}
@@ -81,9 +83,9 @@ display:
     cs_pin: GPIO10
     dc_pin: GPIO11
     contrast: 0xff
-    # Make display updates each of run duration units, so that it reflects
-    # remaining time accurately
-    update_interval: 1${run_duration_uom}
+    rotation: ${display_rotation}
+    # Make display updates every second so information is up to date
+    update_interval: 1s
     pages:
       - id: display_page1
         lambda: |-
@@ -108,28 +110,27 @@ display:
             ${refill_tank_relay_id}->state ? "\U0000e224" : ""
           );
 
-          // TODO: Pick longest remaining from both controllers
-          if (lawn_sprinklers->time_remaining_active_valve().has_value()) {
-            it.printf(
-              42, 12, primary, TextAlign::TOP_CENTER, "Left: %u%s",
-              lawn_sprinklers->time_remaining_active_valve().value(),
-              "${run_duration_uom}"
+          auto time_remaining =
+            max(
+              lawn_sprinklers->time_remaining_active_valve().value_or(0),
+              flowerbed_sprinklers->time_remaining_active_valve().value_or(0)
             );
-            return;
-          }
 
-          if (
-            flowerbed_sprinklers->time_remaining_active_valve().has_value()
-          ) {
+          if (time_remaining > 0) {
+            auto remaining_hours = time_remaining / 3600;
+            auto remaining_minutes = time_remaining / 60;
+            auto remaining_seconds = time_remaining % 60;
             it.printf(
-              42, 12, primary, TextAlign::TOP_CENTER, "Left: %u%s",
-              flowerbed_sprinklers->time_remaining_active_valve().value(),
-              "${run_duration_uom}"
+              0, 12, material_small, TextAlign::TOP_LEFT, "\U0000e425"
             );
-            return;
-          }
 
-          it.print(42, 12, primary, TextAlign::TOP_CENTER, "Idle");
+            it.printf(
+              84, 12, primary, TextAlign::TOP_RIGHT, "%02u:%02u:%02u",
+              remaining_hours, remaining_minutes, remaining_seconds
+            );
+          } else {
+            it.print(42, 12, primary, TextAlign::TOP_CENTER, "Idle");
+          }
 
       - id: display_page2
         lambda: |-

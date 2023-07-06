@@ -18,6 +18,7 @@ substitutions:
   display_page_when_active: display_page1
   display_page_show_duration: 3s
   display_id: display1
+  display_rotation: '0'
   rtc_id: rtc_time
 
 packages:
