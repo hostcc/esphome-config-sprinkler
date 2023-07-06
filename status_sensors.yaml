@@ -85,15 +85,3 @@ text_sensor:
         return { "Active" };
       };
       return { "Idle" };
-  - platform: template
-    entity_category: diagnostic
-    id: device_time
-    name: "Device time"
-    disabled_by_default: true
-    update_interval: 60s
-    lambda: |-
-      if (!homeassistant_time->now().is_valid()) {
-        return { "Invalid" };
-      };
-
-      return { homeassistant_time->now().strftime("%Y-%m-%d %a %H:%M") };
