@@ -5,6 +5,8 @@ substitutions:
   base_path: .
   run_duration_uom: s
   run_duration_initial_value: '5'
+  rain_sensor_id: rain_sensor
+  water_tank_empty_id: water_tank_empty
   refill_tank_relay_id: relay_7
   pump_relay_id: relay_8
   valve_overlap: 1s
@@ -16,6 +18,7 @@ substitutions:
   display_page_when_active: display_page1
   display_page_show_duration: 3s
   display_id: display1
+  rtc_id: rtc_time
 
 packages:
   outputs: !include outputs.yaml
@@ -26,3 +29,4 @@ packages:
   controllers: !include controllers.yaml
   status_sensors: !include status_sensors.yaml
   time: !include time.yaml
+  rtc: !include rtc.yaml
