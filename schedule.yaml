@@ -153,67 +153,59 @@ number:
     step: 1
     mode: box
 
-# Dynamic time.on_time component
-esphome:
-  includes:
-    - ${base_path}/dynamic_on_time.h
+external_components:
+  - source:
+      type: local
+      path: ${base_path}/components
 
-custom_component:
-  - lambda: |-
-      auto lambdacondition_water_tank_empty
-        = new LambdaCondition<>([=]() -> bool {
-          return !${water_tank_empty_id}->state;
-        });
-
-      auto waituntilaction_water_tank_empty
-        = new WaitUntilAction<>(lambdacondition_water_tank_empty);
-      waituntilaction_water_tank_empty->set_timeout_value(60 * 1000);
-      waituntilaction_water_tank_empty->set_component_source("binary_sensor");
-      App.register_component(waituntilaction_water_tank_empty);
-
-      const std::vector<esphome::Action<> *> actions_flowerbed = {
-        waituntilaction_water_tank_empty,
-        new sprinkler::StartFullCycleAction<>(flowerbed_sprinklers)
-      };
-
-      const std::vector<esphome::Action<> *> actions_lawn = {
-        waituntilaction_water_tank_empty,
-        new sprinkler::StartFullCycleAction<>(lawn_sprinklers)
-      };
-
-      auto lawn_sprinklers_on_time = new DynamicOnTime(
-        "lawn_sprinklers_on_time",
-        id(${rtc_id}),
-        id(lawn_sprinklers_hour),
-        id(lawn_sprinklers_minute),
-        id(lawn_sprinklers_mon),
-        id(lawn_sprinklers_tue),
-        id(lawn_sprinklers_wed),
-        id(lawn_sprinklers_thu),
-        id(lawn_sprinklers_fri),
-        id(lawn_sprinklers_sat),
-        id(lawn_sprinklers_sun),
-        actions_lawn
-      );
-      auto flowerbed_sprinklers_on_time = new DynamicOnTime(
-        "flowerbed_sprinklers_on_time",
-        id(${rtc_id}),
-        id(flowerbed_sprinklers_hour),
-        id(flowerbed_sprinklers_minute),
-        id(flowerbed_sprinklers_mon),
-        id(flowerbed_sprinklers_tue),
-        id(flowerbed_sprinklers_wed),
-        id(flowerbed_sprinklers_thu),
-        id(flowerbed_sprinklers_fri),
-        id(flowerbed_sprinklers_sat),
-        id(flowerbed_sprinklers_sun),
-        actions_flowerbed
-      );
-
-      return {
-        lawn_sprinklers_on_time,
-        flowerbed_sprinklers_on_time
-      };
-    components:
-      - id: lawn_sprinklers_on_time
-      - id: flowerbed_sprinklers_on_time
+dynamic_on_time:
+  - id: lawn_schedule
+    rtc: ${rtc_id}
+    hour: lawn_sprinklers_hour
+    minute: lawn_sprinklers_minute
+    mon: lawn_sprinklers_mon
+    tue: lawn_sprinklers_tue
+    wed: lawn_sprinklers_wed
+    thu: lawn_sprinklers_thu
+    fri: lawn_sprinklers_fri
+    sat: lawn_sprinklers_sat
+    sun: lawn_sprinklers_sun
+    on_time:
+      - logger.log:
+          format: 'schedule: Waiting for rain sensor to be inactive'
+          tag: lawn_sprinklers
+          level: 'INFO'
+      - wait_until:
+          condition:
+            binary_sensor.is_off: ${water_tank_empty_id}
+          timeout: 60s
+      - logger.log:
+          format: 'schedule: Starting full sprinkler cycle'
+          tag: lawn_sprinklers
+          level: 'INFO'
+      - sprinkler.start_full_cycle: lawn_sprinklers
+  - id: flowerbed_schedule
+    rtc: ${rtc_id}
+    hour: flowerbed_sprinklers_hour
+    minute: flowerbed_sprinklers_minute
+    mon: flowerbed_sprinklers_mon
+    tue: flowerbed_sprinklers_tue
+    wed: flowerbed_sprinklers_wed
+    thu: flowerbed_sprinklers_thu
+    fri: flowerbed_sprinklers_fri
+    sat: flowerbed_sprinklers_sat
+    sun: flowerbed_sprinklers_sun
+    on_time:
+      - logger.log:
+          format: 'schedule: Waiting for rain sensor to be inactive'
+          tag: flowerbed
+          level: 'INFO'
+      - wait_until:
+          condition:
+            binary_sensor.is_off: ${water_tank_empty_id}
+          timeout: 60s
+      - logger.log:
+          format: 'schedule: Starting full sprinkler cycle'
+          tag: flowerbed
+          level: 'INFO'
+      - sprinkler.start_full_cycle: flowerbed_sprinklers
