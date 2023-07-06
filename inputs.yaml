@@ -3,7 +3,7 @@
 ---
 binary_sensor:
   - platform: gpio
-    id: rain_sensor
+    id: ${rain_sensor_id}
     pin:
       number: GPIO0
       mode:
@@ -35,7 +35,7 @@ binary_sensor:
             #endif
         - light.turn_off: ${led_id}
   - platform: gpio
-    id: water_tank_empty
+    id: ${water_tank_empty_id}
     pin:
       number: GPIO1
       mode:

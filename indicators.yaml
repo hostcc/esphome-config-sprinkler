@@ -44,7 +44,7 @@ light:
             call.perform();
             return;
           };
-          if (rain_sensor->state) {
+          if (${rain_sensor_id}->state) {
             auto call = ${led_id}->turn_on();
             call.set_brightness(0.1);
             call.set_rgb(0.4, 1.0, 0.9);

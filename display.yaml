@@ -103,8 +103,8 @@ display:
 
           it.printf(
             42, 22, material, TextAlign::TOP_CENTER, "%s%s%s",
-            water_tank_empty->state ? "\U0000f6d5": "\U0000f6d6",
-            rain_sensor->state ? "\U0000f176" : "\U0000e81a",
+            ${water_tank_empty_id}->state ? "\U0000f6d5": "\U0000f6d6",
+            ${rain_sensor_id}->state ? "\U0000f176" : "\U0000e81a",
             ${refill_tank_relay_id}->state ? "\U0000e224" : ""
           );
 
