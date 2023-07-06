@@ -29,7 +29,8 @@ font:
       weight: regular
     id: primary
     size: 14
-    glyphs: '+-:.°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz'
+    glyphs:
+      '+-:.° 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
   - file:
       type: gfonts
       family: Material Symbols Outlined
