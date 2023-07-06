@@ -154,9 +154,7 @@ number:
     mode: box
 
 external_components:
-  - source:
-      type: local
-      path: ${base_path}/components
+  source: github://hostcc/esphome-component-dynamic-on-time
 
 dynamic_on_time:
   - id: lawn_schedule
