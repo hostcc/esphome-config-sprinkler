@@ -21,7 +21,7 @@ class DynamicOnTime : public Component {
   Switch *fri_;
   Switch *sat_;
   Switch *sun_;
-  Action<> *action_;
+  std::vector<esphome::Action<> *> actions_;
   CronTrigger *trigger_{nullptr};
   Automation<> *automation_{nullptr};
 
@@ -55,11 +55,11 @@ class DynamicOnTime : public Component {
     Switch *fri,
     Switch *sat,
     Switch *sun,
-    Action<> *action):
+    std::vector<esphome::Action<> *> actions):
       source_(source), rtc_(rtc),
       hour_(hour), minute_(minute),
       mon_(mon), tue_(tue), wed_(wed), thu_(thu), fri_(fri), sat_(sat),
-      sun_(sun), action_(action) {
+      sun_(sun), actions_(actions) {
     assert(this->hour_ != nullptr);
     assert(this->minute_ != nullptr);
 
@@ -84,8 +84,8 @@ class DynamicOnTime : public Component {
   }
 
   void setup() override {
-    if (!this->action_) {
-      ESP_LOGW(tag, "No action specified, exiting");
+    if (this->actions_.empty()) {
+      ESP_LOGW(tag, "No actions specified, exiting");
       return;
     }
 
@@ -106,7 +106,7 @@ class DynamicOnTime : public Component {
       delete this->automation_;
 
     this->automation_ = new Automation<>(this->trigger_);
-    this->automation_->add_actions({this->action_});
+    this->automation_->add_actions(this->actions_);
 
     this->trigger_->add_second(0);
     for (uint8_t i = 1; i <= 31; i++)
