@@ -59,6 +59,7 @@ font:
       - "\U0000e157"  # Link
       - "\U0000e16f"  # Link off
       - "\U0000e425"  # Timer
+      - "\U0000e089"  # Start
 
 interval:
   - interval: ${display_page_show_duration}
@@ -93,17 +94,20 @@ display:
           #include "esphome/components/api/api_server.h"
           using namespace esphome::api;
 
+          // Day of week and time
           it.strftime(
-            0, 0, primary, TextAlign::TOP_LEFT, "%a %H:%M",
+            84, 0, primary, TextAlign::TOP_RIGHT, "%a %H:%M",
             ${rtc_id}->now()
           );
 
+          // Symbol indicating if a client is connected over API
           it.printf(
-            84, 0, material_small, TextAlign::TOP_RIGHT, "%s",
+            0, 0, material_small, TextAlign::TOP_LEFT, "%s",
             global_api_server && global_api_server->is_connected()
               ? "\U0000e157" : "\U0000e16f"
           );
 
+          // Symbols indicating state of water tank emptiness and rain sensor
           it.printf(
             42, 22, material, TextAlign::TOP_CENTER, "%s%s%s",
             ${water_tank_empty_id}->state ? "\U0000f6d5": "\U0000f6d6",
@@ -111,6 +115,7 @@ display:
             ${refill_tank_relay_id}->state ? "\U0000e224" : ""
           );
 
+          // Run time remaining
           auto time_remaining =
             max(
               lawn_sprinklers->time_remaining_active_valve().value_or(0),
@@ -121,46 +126,49 @@ display:
             auto remaining_hours = time_remaining / 3600;
             auto remaining_minutes = time_remaining / 60;
             auto remaining_seconds = time_remaining % 60;
-            it.printf(
-              0, 12, material_small, TextAlign::TOP_LEFT, "\U0000e425"
-            );
+
+            // Symbol indicating run time remaining
+            it.print(0, 12, material_small, TextAlign::TOP_LEFT, "\U0000e425");
 
             it.printf(
               84, 12, primary, TextAlign::TOP_RIGHT, "%02u:%02u:%02u",
               remaining_hours, remaining_minutes, remaining_seconds
             );
           } else {
-            it.print(42, 12, primary, TextAlign::TOP_CENTER, "Idle");
+            // Symbol indicating next start time
+            it.print(0, 12, material_small, TextAlign::TOP_LEFT, "\U0000e089");
+
+            it.strftime(
+              84, 12, primary, TextAlign::TOP_RIGHT, "%a %H:%M",
+              id(lawn_schedule).get_next_schedule().value_or(ESPTime{})
+              < id(flowerbed_schedule).get_next_schedule().value_or(ESPTime{})
+              ? id(lawn_schedule).get_next_schedule().value()
+              : id(flowerbed_schedule).get_next_schedule().value()
+            );
           }
 
       - id: display_page2
         lambda: |-
           #include "esphome/components/wifi/wifi_component.h"
           using namespace esphome::wifi;
+
+          // Symbol indicating whether WiFi is connected and its signal level
+          // if yes
           if (global_wifi_component && global_wifi_component->is_connected()) {
-            it.printf(
-              0, 14, material, TextAlign::CENTER_LEFT, "%s",
-              "\U0000e63e"
-            );
+            it.print(
+              0, 14, material, TextAlign::CENTER_LEFT, "\U0000e63e");
             it.printf(
               84, 14, primary, TextAlign::CENTER_RIGHT, "%i dBm",
               global_wifi_component->wifi_rssi()
             );
 
           } else {
-            it.printf(
-              0, 14, material, TextAlign::CENTER_LEFT, "%s",
-              "\U0000e648"
-            );
-            it.printf(
-              84, 14, primary, TextAlign::CENTER_RIGHT, " "
-            );
+            it.print(0, 14, material, TextAlign::CENTER_LEFT, "\U0000e648");
+            it.print(84, 14, primary, TextAlign::CENTER_RIGHT, " ");
           }
 
-          it.printf(
-            0, 36, material, TextAlign::CENTER_LEFT, "%s",
-            "\U0000e1ff"
-          );
+          // Symbol and value of the internal temperature sensor
+          it.print( 0, 36, material, TextAlign::CENTER_LEFT, "\U0000e1ff");
           it.printf(
             84, 36, primary, TextAlign::CENTER_RIGHT, "%.1f C",
             temperature->state
