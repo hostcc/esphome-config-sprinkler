@@ -30,7 +30,7 @@ font:
     id: primary
     size: 14
     glyphs:
-      '+-:.° 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+      '+-:.°/% 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
   - file:
       type: gfonts
       family: Material Symbols Outlined
@@ -138,13 +138,30 @@ display:
             // Symbol indicating next start time
             it.print(0, 12, material_small, TextAlign::TOP_LEFT, "\U0000e089");
 
-            it.strftime(
-              84, 12, primary, TextAlign::TOP_RIGHT, "%a %H:%M",
-              id(lawn_schedule).get_next_schedule().value_or(ESPTime{})
-              < id(flowerbed_schedule).get_next_schedule().value_or(ESPTime{})
-              ? id(lawn_schedule).get_next_schedule().value()
-              : id(flowerbed_schedule).get_next_schedule().value()
-            );
+            auto lawn_next_schedule =
+              id(lawn_schedule).get_next_schedule();
+            auto flowerbed_next_schedule =
+              id(flowerbed_schedule).get_next_schedule();
+
+            if (!lawn_next_schedule.has_value()
+               && !flowerbed_next_schedule.has_value()) {
+                // None of schedules are set
+                it.print(84, 12, primary, TextAlign::TOP_RIGHT, "N/A");
+            } else {
+              it.strftime(
+                84, 12, primary, TextAlign::TOP_RIGHT, "%a %H:%M",
+                // Direct comparison of two `optional<ESPTime>` doesn't work
+                // (seems `ESPTime` lacks `<` over two `const ESPTime` inferred
+                // by `optional` operator `<`), so include checking if first
+                // optional has value otherwise pick the second one. Note
+                // either of optionals would have a value, see condition above
+                // applicable when they aren't
+                lawn_next_schedule
+                && lawn_next_schedule.value() < flowerbed_next_schedule.value()
+                ? lawn_next_schedule.value()
+                : flowerbed_next_schedule.value()
+              );
+            }
           }
 
       - id: display_page2
@@ -173,3 +190,25 @@ display:
             84, 36, primary, TextAlign::CENTER_RIGHT, "%.1f C",
             temperature->state
           );
+
+text_sensor:
+  - platform: template
+    id: lawn_sprinklers_next_schedule
+    name: "Lawn sprinklers: next schedule"
+    update_interval: 5s
+    entity_category: diagnostic
+    lambda: |-
+      auto next_schedule = id(lawn_schedule).get_next_schedule();
+       if (next_schedule.has_value())
+         return { next_schedule.value().strftime("%c") };
+      return { "N/A" };
+  - platform: template
+    id: flowerbed_sprinklers_next_schedule
+    name: "Flowerbed sprinklers: next schedule"
+    update_interval: 5s
+    entity_category: diagnostic
+    lambda: |-
+      auto next_schedule = id(flowerbed_schedule).get_next_schedule();
+       if (next_schedule.has_value())
+         return { next_schedule.value().strftime("%c") };
+      return { "N/A" };
