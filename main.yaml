@@ -13,6 +13,7 @@ substitutions:
   pump_start_pump_delay: 1s
   pump_stop_valve_delay: 1s
   refill_relay_pulse_duration: 3s
+  scheduled_start_wait_tank_full_duration: 60s
   led_id: led
   display_backlight_id: display1_backlight
   display_page_when_active: display_page1
