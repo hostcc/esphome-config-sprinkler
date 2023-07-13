@@ -146,7 +146,7 @@ display:
             if (!lawn_next_schedule.has_value()
                && !flowerbed_next_schedule.has_value()) {
                 // None of schedules are set
-                it.print(84, 12, primary, TextAlign::TOP_RIGHT, "N/A");
+                it.print(84, 12, primary, TextAlign::TOP_RIGHT, "--- --:--");
             } else {
               it.strftime(
                 84, 12, primary, TextAlign::TOP_RIGHT, "%a %H:%M",
