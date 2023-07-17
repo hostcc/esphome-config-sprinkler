@@ -16,6 +16,7 @@ binary_sensor:
       - delayed_off: 100ms
     on_press:
       then:
+        - light.turn_on: ${led_id}
         - switch.turn_on: flowerbed_sprinklers_standby_switch
         - switch.turn_on: lawn_sprinklers_standby_switch
         - sprinkler.shutdown: flowerbed_sprinklers
@@ -24,7 +25,6 @@ binary_sensor:
             #ifdef HAS_DISPLAY
             ${display_id}->update();
             #endif
-        - light.turn_on: ${led_id}
     on_release:
       then:
         - switch.turn_off: flowerbed_sprinklers_standby_switch
