@@ -15,6 +15,7 @@ substitutions:
   refill_relay_pulse_duration: 3s
   scheduled_start_wait_tank_full_duration: 60s
   led_id: led
+  led_brightness: '0.5'
   display_backlight_id: display1_backlight
   display_page_when_active: display_page1
   display_page_show_duration: 3s

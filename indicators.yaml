@@ -22,11 +22,11 @@ light:
           update_interval: 1s
       - pulse:
           name: pulse_2hz
-          transition_length: 0.5s
+          transition_length: 0.2s
           update_interval: 0.5s
       - pulse:
           name: pulse_slow
-          transition_length: 2s
+          transition_length: 1s
           update_interval: 2s
     on_turn_on:
       - lambda: |-
@@ -38,17 +38,17 @@ light:
               != esphome::sprinkler::SprinklerState::IDLE
           ) {
             auto call = ${led_id}->turn_on();
-            call.set_brightness(0.1);
-            call.set_rgb(0.4, 1.0, 0.9);
             call.set_effect("pulse_2hz");
+            call.set_color_brightness(${led_brightness});
+            call.set_rgb(1.0, 0.4, 0.9);
             call.perform();
             return;
           };
           if (${rain_sensor_id}->state) {
             auto call = ${led_id}->turn_on();
-            call.set_brightness(0.1);
-            call.set_rgb(0.4, 1.0, 0.9);
             call.set_effect("pulse_slow");
+            call.set_color_brightness(${led_brightness});
+            call.set_rgb(0.4, 1.0, 0.9);
             call.perform();
             return;
           };
