@@ -1,6 +1,10 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2023 Ilia Sotnikov
 ---
+esphome:
+  # Required for proper resume handling
+  min_version: '2023.7.0b2'
+
 sprinkler:
   - id: lawn_sprinklers
     main_switch:
