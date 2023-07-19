@@ -1,2 +1,2 @@
-esphome>=2023.7.0b2
+esphome>=2023.7.0
 pillow~=9.5

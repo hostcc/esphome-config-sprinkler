@@ -3,7 +3,7 @@
 ---
 esphome:
   # Required for proper resume handling
-  min_version: '2023.7.0b2'
+  min_version: '2023.7.0'
 
 sprinkler:
   - id: lawn_sprinklers
