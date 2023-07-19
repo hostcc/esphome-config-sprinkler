@@ -18,5 +18,3 @@ wifi:
 packages:
   main: !include
     file: ../main.yaml
-    vars:
-      base_path: ../
