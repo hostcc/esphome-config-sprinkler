@@ -4,11 +4,7 @@
 if:
   condition:
     lambda: |-
-      #include "esphome/components/sprinkler/sprinkler.h"
-
-      auto controller = ${sprinkler};
-      return controller->controller_state()
-        != esphome::sprinkler::SprinklerState::IDLE;
+      return ${condition};
   then:
     - sprinkler.pause: ${sprinkler}
     - switch.turn_on: ${relay}
