@@ -18,6 +18,12 @@ sprinkler:
             #endif
         - light.turn_on: ${led_id}
       on_turn_off:
+        - !include
+          file: script_refill_tank.yaml
+          vars:
+            sprinkler: lawn_sprinklers
+            relay: ${refill_tank_relay_id}
+            condition: '!${refill_tank_after_each_valve}'
         - light.turn_off: ${led_id}
         - lambda: |-
             #ifdef HAS_DISPLAY
@@ -39,6 +45,7 @@ sprinkler:
             vars:
               sprinkler: lawn_sprinklers
               relay: ${refill_tank_relay_id}
+              condition: ${refill_tank_after_each_valve}
         enable_switch: "Enable south lawn"
         run_duration_number:
           name: "South lawn run duration"
@@ -54,6 +61,7 @@ sprinkler:
             vars:
               sprinkler: lawn_sprinklers
               relay: ${refill_tank_relay_id}
+              condition: ${refill_tank_after_each_valve}
         enable_switch: "Enable north lawn"
         run_duration_number:
           name: "North lawn run duration"
@@ -69,6 +77,7 @@ sprinkler:
             vars:
               sprinkler: lawn_sprinklers
               relay: ${refill_tank_relay_id}
+              condition: ${refill_tank_after_each_valve}
         enable_switch: "Enable west lawn"
         run_duration_number:
           name: "West lawn run duration"
@@ -90,6 +99,12 @@ sprinkler:
             #endif
         - light.turn_on: ${led_id}
       on_turn_off:
+        - !include
+          file: script_refill_tank.yaml
+          vars:
+            sprinkler: flowerbed_sprinklers
+            relay: ${refill_tank_relay_id}
+            condition: '!${refill_tank_after_each_valve}'
         - light.turn_off: ${led_id}
         - lambda: |-
             #ifdef HAS_DISPLAY
@@ -111,6 +126,7 @@ sprinkler:
             vars:
               sprinkler: flowerbed_sprinklers
               relay: ${refill_tank_relay_id}
+              condition: ${refill_tank_after_each_valve}
         enable_switch: "Enable south flowerbed"
         run_duration_number:
           name: "South flowerbed run duration"
@@ -126,6 +142,7 @@ sprinkler:
             vars:
               sprinkler: flowerbed_sprinklers
               relay: ${refill_tank_relay_id}
+              condition: ${refill_tank_after_each_valve}
         enable_switch: "Enable west flowerbed"
         run_duration_number:
           name: "West flowerbed"
