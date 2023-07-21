@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: Apache-1.0
+# Copyright (c) 2023 Ilia Sotnikov
+---
+!lambda |-
+  #include <esphome/components/sprinkler/sprinkler.h>
+  #define PAUSED_STR "Paused: "
+  #define PAUSED_STR_LEN sizeof(PAUSED_STR) - 1
+  auto controller = ${sprinkler};
+
+  auto paused_valve = controller->paused_valve();
+  if (paused_valve.has_value()) {
+    auto paused_valve_name = controller->valve_name(paused_valve.value());
+    auto st = str_snprintf(
+      PAUSED_STR "%s", PAUSED_STR_LEN + strlen(paused_valve_name),
+      paused_valve_name);
+    return {st.c_str()};
+  }
+
+  switch(controller->controller_state()) {
+    case esphome::sprinkler::SprinklerState::IDLE: return {"Idle"};
+    case esphome::sprinkler::SprinklerState::STARTING: return {"Starting"};
+    case esphome::sprinkler::SprinklerState::ACTIVE: return {"Active"};
+    case esphome::sprinkler::SprinklerState::STOPPING: return {"Stopping"};
+    case esphome::sprinkler::SprinklerState::BYPASS: return {"Bypass"};
+  };
+
+  return {"N/A"};
