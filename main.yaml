@@ -5,7 +5,9 @@ substitutions:
   run_duration_uom: s
   run_duration_initial_value: '5'
   rain_sensor_id: rain_sensor
+  rain_sensor_inverted: 'true'
   water_tank_empty_id: water_tank_empty
+  water_tank_empty_inverted: 'true'
   refill_tank_relay_id: relay_7
   refill_tank_after_each_valve: 'false'
   pump_relay_id: relay_8

@@ -9,7 +9,7 @@ binary_sensor:
       mode:
         pullup: true
         input: true
-      inverted: true
+      inverted: ${rain_sensor_inverted}
     name: "Rain sensor"
     filters:
       - delayed_on: 100ms
@@ -41,7 +41,7 @@ binary_sensor:
       mode:
         pullup: true
         input: true
-      inverted: true
+      inverted: ${water_tank_empty_inverted}
     name: "Water tank empty"
     filters:
       - delayed_on: 100ms
