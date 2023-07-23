@@ -5,6 +5,7 @@ sensor:
   - platform: internal_temperature
     id: temperature
     name: "Internal Temperature"
+    icon: "mdi:thermometer"
     entity_category: diagnostic
     update_interval: 60s
 
@@ -12,6 +13,7 @@ text_sensor:
   - platform: template
     id: lawn_sprinklers_state
     name: "Lawn sprinklers state"
+    icon: "mdi:state-machine"
     entity_category: diagnostic
     lambda: !include
       file: script_controller_status.yaml
@@ -22,6 +24,7 @@ text_sensor:
     id: flowerbed_sprinklers_state
     entity_category: diagnostic
     name: "Flowerbed sprinklers state"
+    icon: "mdi:state-machine"
     lambda: !include
       file: script_controller_status.yaml
       vars:
@@ -31,6 +34,7 @@ text_sensor:
     entity_category: diagnostic
     id: pump_state
     name: "Pump state"
+    icon: "mdi:pump"
     update_interval: 5s
     lambda: |-
       return { ${pump_relay_id}->state ? "Active" : "Idle" };
@@ -38,6 +42,7 @@ text_sensor:
     entity_category: diagnostic
     id: tank_refill_state
     name: "Tank refill state"
+    icon: "mdi:pipe-valve"
     update_interval: 5s
     lambda: |-
       return { ${refill_tank_relay_id}->state ? "Active" : "Idle" };

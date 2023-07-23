@@ -6,42 +6,49 @@ switch:
   - platform: template
     id: lawn_sprinklers_mon
     name: "Lawn sprinklers: Mon"
+    icon: "mdi:calendar"
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
   - platform: template
     id: lawn_sprinklers_tue
     name: "Lawn sprinklers: Tue"
+    icon: "mdi:calendar"
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
   - platform: template
     id: lawn_sprinklers_wed
     name: "Lawn sprinklers: Wed"
+    icon: "mdi:calendar"
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
   - platform: template
     id: lawn_sprinklers_thu
     name: "Lawn sprinklers: Thu"
+    icon: "mdi:calendar"
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
   - platform: template
     id: lawn_sprinklers_fri
     name: "Lawn sprinklers: Fri"
+    icon: "mdi:calendar"
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
   - platform: template
     id: lawn_sprinklers_sat
     name: "Lawn sprinklers: Sat"
+    icon: "mdi:calendar"
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
   - platform: template
     id: lawn_sprinklers_sun
     name: "Lawn sprinklers: Sun"
+    icon: "mdi:calendar"
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
@@ -50,42 +57,49 @@ switch:
   - platform: template
     id: flowerbed_sprinklers_mon
     name: "Flowerbed sprinklers: Mon"
+    icon: "mdi:calendar"
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
   - platform: template
     id: flowerbed_sprinklers_tue
     name: "Flowerbed sprinklers: Tue"
+    icon: "mdi:calendar"
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
   - platform: template
     id: flowerbed_sprinklers_wed
     name: "Flowerbed sprinklers: Wed"
+    icon: "mdi:calendar"
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
   - platform: template
     id: flowerbed_sprinklers_thu
     name: "Flowerbed sprinklers: Thu"
+    icon: "mdi:calendar"
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
   - platform: template
     id: flowerbed_sprinklers_fri
     name: "Flowerbed sprinklers: Fri"
+    icon: "mdi:calendar"
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
   - platform: template
     id: flowerbed_sprinklers_sat
     name: "Flowerbed sprinklers: Sat"
+    icon: "mdi:calendar"
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
   - platform: template
     id: flowerbed_sprinklers_sun
     name: "Flowerbed sprinklers: Sun"
+    icon: "mdi:calendar"
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
@@ -95,6 +109,7 @@ number:
   - platform: template
     id: lawn_sprinklers_hour
     name: "Lawn sprinklers: Hour"
+    icon: "mdi:clock"
     entity_category: config
     optimistic: true
     restore_value: true
@@ -105,6 +120,7 @@ number:
     mode: box
   - platform: template
     name: "Lawn sprinklers: Minute"
+    icon: "mdi:clock"
     id: lawn_sprinklers_minute
     entity_category: config
     optimistic: true
@@ -118,6 +134,7 @@ number:
   # Schedule, flowerbed sprinklers
   - platform: template
     name: "Flowerbed sprinklers: Hour"
+    icon: "mdi:clock"
     id: flowerbed_sprinklers_hour
     entity_category: config
     optimistic: true
@@ -129,6 +146,7 @@ number:
     mode: box
   - platform: template
     name: "Flowerbed sprinklers: Minute"
+    icon: "mdi:clock"
     id: flowerbed_sprinklers_minute
     entity_category: config
     optimistic: true

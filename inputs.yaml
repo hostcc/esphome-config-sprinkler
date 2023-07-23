@@ -11,6 +11,7 @@ binary_sensor:
         input: true
       inverted: ${rain_sensor_inverted}
     name: "Rain sensor"
+    icon: "mdi:weather-pouring"
     filters:
       - delayed_on: 100ms
       - delayed_off: 100ms
@@ -34,6 +35,7 @@ binary_sensor:
             ${display_id}->update();
             #endif
         - light.turn_off: ${led_id}
+
   - platform: gpio
     id: ${water_tank_empty_id}
     pin:
@@ -43,6 +45,7 @@ binary_sensor:
         input: true
       inverted: ${water_tank_empty_inverted}
     name: "Water tank empty"
+    icon: "mdi:water-off"
     filters:
       - delayed_on: 100ms
       - delayed_off: 100ms

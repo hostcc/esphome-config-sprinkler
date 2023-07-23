@@ -195,6 +195,7 @@ text_sensor:
   - platform: template
     id: lawn_sprinklers_next_schedule
     name: "Lawn sprinklers: next schedule"
+    icon: "mdi:alarm"
     update_interval: 5s
     entity_category: diagnostic
     lambda: |-
@@ -205,6 +206,7 @@ text_sensor:
   - platform: template
     id: flowerbed_sprinklers_next_schedule
     name: "Flowerbed sprinklers: next schedule"
+    icon: "mdi:alarm"
     update_interval: 5s
     entity_category: diagnostic
     lambda: |-
