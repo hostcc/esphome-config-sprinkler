@@ -15,26 +15,12 @@ binary_sensor:
     filters:
       - delayed_on: 100ms
       - delayed_off: 100ms
-    on_press:
+    on_state:
       then:
-        - light.turn_on: ${led_id}
-        - switch.turn_on: flowerbed_sprinklers_standby_switch
-        - switch.turn_on: lawn_sprinklers_standby_switch
-        - sprinkler.shutdown: flowerbed_sprinklers
-        - sprinkler.shutdown: lawn_sprinklers
-        - lambda: |-
-            #ifdef HAS_DISPLAY
-            ${display_id}->update();
-            #endif
-    on_release:
-      then:
-        - switch.turn_off: flowerbed_sprinklers_standby_switch
-        - switch.turn_off: lawn_sprinklers_standby_switch
-        - lambda: |-
-            #ifdef HAS_DISPLAY
-            ${display_id}->update();
-            #endif
-        - light.turn_off: ${led_id}
+        - lambda: !include
+            file: script_rain_water_tank_sensors_action.yaml
+            vars:
+              triggered_by: ${rain_sensor_id}
 
   - platform: gpio
     id: ${water_tank_empty_id}
@@ -49,26 +35,12 @@ binary_sensor:
     filters:
       - delayed_on: 100ms
       - delayed_off: 100ms
-    on_press:
+    on_state:
       then:
-        - sprinkler.pause: flowerbed_sprinklers
-        - sprinkler.pause: lawn_sprinklers
-        - switch.turn_on: flowerbed_sprinklers_standby_switch
-        - switch.turn_on: lawn_sprinklers_standby_switch
-        - lambda: |-
-            #ifdef HAS_DISPLAY
-            ${display_id}->update();
-            #endif
-    on_release:
-      then:
-        - switch.turn_off: flowerbed_sprinklers_standby_switch
-        - switch.turn_off: lawn_sprinklers_standby_switch
-        - sprinkler.resume: flowerbed_sprinklers
-        - sprinkler.resume: lawn_sprinklers
-        - lambda: |-
-            #ifdef HAS_DISPLAY
-            ${display_id}->update();
-            #endif
+        - lambda: !include
+            file: script_rain_water_tank_sensors_action.yaml
+            vars:
+              triggered_by: ${water_tank_empty_id}
   - platform: gpio
     internal: true
     pin:

@@ -1,0 +1,63 @@
+# SPDX-License-Identifier: Apache-1.0
+# Copyright (c) 2023 Ilia Sotnikov
+---
+!lambda |-
+  // Handle rain detected or water tank is empty
+  if (${rain_sensor_id}->state || ${water_tank_empty_id}->state) {
+    ESP_LOGI(
+      "${triggered_by}",
+      "%s sprinklers and putting them in standby",
+      ${triggered_by} == ${rain_sensor_id} ? "Stopping" : "Pausing"
+    );
+
+    // Put sprinklers into standby mode
+    flowerbed_sprinklers_standby_switch->turn_on();
+    lawn_sprinklers_standby_switch->turn_on();
+
+    // Shutdown any running operation in case of rain, also turn on LED
+    // indicating the condition
+    if (${triggered_by} == ${rain_sensor_id}) {
+      ${led_id}->turn_on();
+      flowerbed_sprinklers->shutdown();
+      lawn_sprinklers->shutdown();
+    }
+
+    // Pause any active operation if water tank is empty, so it could resume
+    // once it becomes full
+    if (${triggered_by} == ${water_tank_empty_id}) {
+      flowerbed_sprinklers->pause();
+      lawn_sprinklers->pause();
+    }
+
+    #ifdef HAS_DISPLAY
+    ${display_id}->update();
+    #endif
+
+    // Any active condition above is terminating, i.e. if one sensor is active
+    // stopping/pausing won't be reverted by processing another sensor being
+    // inactive
+    return;
+  }
+
+  ESP_LOGI(
+    "${triggered_by}", "Putting sprinklers out of standby"
+  );
+  // Move sprinklers out of standby mode
+  flowerbed_sprinklers_standby_switch->turn_off();
+  lawn_sprinklers_standby_switch->turn_off();
+
+  // Turn off LED indicating that rain is detected
+  if (${triggered_by} == ${rain_sensor_id}) {
+    ${led_id}->turn_off();
+  }
+
+  // Resume any operation if any once water tank is full
+  if (${triggered_by} == ${water_tank_empty_id}) {
+    ESP_LOGI("${triggered_by}", "Resuming sprinklers");
+    flowerbed_sprinklers->resume();
+    lawn_sprinklers->resume();
+  }
+
+  #ifdef HAS_DISPLAY
+  ${display_id}->update();
+  #endif
