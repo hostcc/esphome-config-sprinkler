@@ -7,6 +7,9 @@
   #define PAUSED_STR_LEN sizeof(PAUSED_STR) - 1
   auto controller = ${sprinkler};
 
+  if (controller->standby())
+    return {"Standby"};
+
   auto paused_valve = controller->paused_valve();
   if (paused_valve.has_value()) {
     auto paused_valve_name = controller->valve_name(paused_valve.value());
