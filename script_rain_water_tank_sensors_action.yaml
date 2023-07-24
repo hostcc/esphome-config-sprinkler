@@ -2,12 +2,23 @@
 # Copyright (c) 2023 Ilia Sotnikov
 ---
 !lambda |-
+  // Define preprocessor macro after entity triggered the script for
+  // conditionals
+  #define TRIGGERED_BY_${triggered_by}
+
   // Handle rain detected or water tank is empty
   if (${rain_sensor_id}->state || ${water_tank_empty_id}->state) {
     ESP_LOGI(
       "${triggered_by}",
-      "%s sprinklers and putting them in standby",
-      ${triggered_by} == ${rain_sensor_id} ? "Stopping" : "Pausing"
+      "%s sprinklers and putting them in standby"
+      " (rain sensor state: %s, water tank empty state: %s)",
+      #ifdef TRIGGERED_BY_${rain_sensor_id}
+      "Stopping"
+      #else
+      "Pausing"
+      #endif
+      , ${rain_sensor_id}->state ? "ON": "OFF"
+      , ${water_tank_empty_id}->state ? "ON": "OFF"
     );
 
     // Put sprinklers into standby mode
@@ -16,18 +27,18 @@
 
     // Shutdown any running operation in case of rain, also turn on LED
     // indicating the condition
-    if (${triggered_by} == ${rain_sensor_id}) {
-      ${led_id}->turn_on();
-      flowerbed_sprinklers->shutdown();
-      lawn_sprinklers->shutdown();
-    }
+    #ifdef TRIGGERED_BY_${rain_sensor_id}
+    ${led_id}->turn_on();
+    flowerbed_sprinklers->shutdown();
+    lawn_sprinklers->shutdown();
+    #endif
 
     // Pause any active operation if water tank is empty, so it could resume
     // once it becomes full
-    if (${triggered_by} == ${water_tank_empty_id}) {
-      flowerbed_sprinklers->pause();
-      lawn_sprinklers->pause();
-    }
+    #ifdef TRIGGERED_BY_${water_tank_empty_id}
+    flowerbed_sprinklers->pause();
+    lawn_sprinklers->pause();
+    #endif
 
     #ifdef HAS_DISPLAY
     ${display_id}->update();
@@ -47,17 +58,22 @@
   lawn_sprinklers_standby_switch->turn_off();
 
   // Turn off LED indicating that rain is detected
-  if (${triggered_by} == ${rain_sensor_id}) {
-    ${led_id}->turn_off();
-  }
+  #ifdef TRIGGERED_BY_${rain_sensor_id}
+  ${led_id}->turn_off();
+  #endif
 
   // Resume any operation if any once water tank is full
-  if (${triggered_by} == ${water_tank_empty_id}) {
-    ESP_LOGI("${triggered_by}", "Resuming sprinklers");
-    flowerbed_sprinklers->resume();
-    lawn_sprinklers->resume();
-  }
+  #ifdef TRIGGERED_BY_${water_tank_empty_id}
+  ESP_LOGI("${triggered_by}", "Resuming sprinklers");
+  flowerbed_sprinklers->resume();
+  lawn_sprinklers->resume();
+  #endif
 
   #ifdef HAS_DISPLAY
   ${display_id}->update();
   #endif
+
+  // Preprocessor macros lack scope so undefine the macro for another script
+  // instance to have proper conditionals (i.e. prevent wrongly evaluating
+  // macro for another triggering entity has own macro defined)
+  #undef TRIGGERED_BY_${triggered_by}
