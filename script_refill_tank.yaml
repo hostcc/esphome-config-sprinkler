@@ -6,6 +6,10 @@ if:
     lambda: |-
       return ${condition};
   then:
+    - logger.log:
+        format: 'Triggering'
+        tag: 'refill tank'
+        level: 'INFO'
     - sprinkler.pause: ${sprinkler}
     - switch.turn_on: ${relay}
     - lambda: |-
@@ -19,3 +23,7 @@ if:
         #ifdef HAS_DISPLAY
         ${display_id}->update();
         #endif
+    - logger.log:
+        format: 'Triggered'
+        tag: 'refill tank'
+        level: 'INFO'
