@@ -4,12 +4,20 @@
 if:
   condition:
     lambda: |-
-      return ${condition};
+      #include "esphome/core/component.h"
+      return
+        ${condition}
+        // Ignore the fragment being triggered during 'sprinkler' component
+        // setup when its switches are turned off initially (would be redundant)
+        && (id(${sprinkler}).get_component_state() & COMPONENT_STATE_LOOP)
+        // Ignore attempt to refill the tank when it has already been reported
+        // as empty (would be redundant)
+        && !id(${water_tank_empty_id}).state;
   then:
     - logger.log:
-        format: 'Triggering'
-        tag: 'refill tank'
-        level: 'INFO'
+        format: Triggering water tank refill
+        tag: ${sprinkler}
+        level: INFO
     - sprinkler.pause: ${sprinkler}
     - switch.turn_on: ${relay}
     - lambda: |-
@@ -23,7 +31,3 @@ if:
         #ifdef HAS_DISPLAY
         ${display_id}->update();
         #endif
-    - logger.log:
-        format: 'Triggered'
-        tag: 'refill tank'
-        level: 'INFO'
