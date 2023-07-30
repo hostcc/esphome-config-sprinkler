@@ -22,12 +22,12 @@ if:
     - switch.turn_on: ${relay}
     - lambda: |-
         #ifdef HAS_DISPLAY
-        ${display_id}->update();
+        id(${display_id}).update();
         #endif
     - delay: ${refill_relay_pulse_duration}
     - switch.turn_off: ${relay}
     - sprinkler.resume: ${sprinkler}
     - lambda: |-
         #ifdef HAS_DISPLAY
-        ${display_id}->update();
+        id(${display_id}).update();
         #endif

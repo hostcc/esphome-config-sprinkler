@@ -70,9 +70,9 @@ interval:
                 #include <esphome/components/sprinkler/sprinkler.h>
 
                 return
-                  lawn_sprinklers->controller_state()
+                  id(lawn_sprinklers).controller_state()
                     == esphome::sprinkler::SprinklerState::IDLE
-                  && flowerbed_sprinklers->controller_state()
+                  && id(flowerbed_sprinklers).controller_state()
                     == esphome::sprinkler::SprinklerState::IDLE;
           then:
             - display.page.show_next: ${display_id}
@@ -97,7 +97,7 @@ display:
           // Day of week and time
           it.strftime(
             84, 0, primary, TextAlign::TOP_RIGHT, "%a %H:%M",
-            ${rtc_id}->now()
+            id(${rtc_id}).now()
           );
 
           // Symbol indicating if a client is connected over API
@@ -110,16 +110,16 @@ display:
           // Symbols indicating state of water tank emptiness and rain sensor
           it.printf(
             42, 22, material, TextAlign::TOP_CENTER, "%s%s%s",
-            ${water_tank_empty_id}->state ? "\U0000f6d5": "\U0000f6d6",
-            ${rain_sensor_id}->state ? "\U0000f176" : "\U0000e81a",
-            ${refill_tank_relay_id}->state ? "\U0000e224" : ""
+            id(${water_tank_empty_id}).state ? "\U0000f6d5": "\U0000f6d6",
+            id(${rain_sensor_id}).state ? "\U0000f176" : "\U0000e81a",
+            id(${refill_tank_relay_id}).state ? "\U0000e224" : ""
           );
 
           // Run time remaining
           auto time_remaining =
             max(
-              lawn_sprinklers->time_remaining_active_valve().value_or(0),
-              flowerbed_sprinklers->time_remaining_active_valve().value_or(0)
+              id(lawn_sprinklers).time_remaining_active_valve().value_or(0),
+              id(flowerbed_sprinklers).time_remaining_active_valve().value_or(0)
             );
 
           if (time_remaining > 0) {
@@ -188,5 +188,5 @@ display:
           it.print( 0, 36, material, TextAlign::CENTER_LEFT, "\U0000e1ff");
           it.printf(
             84, 36, primary, TextAlign::CENTER_RIGHT, "%.1f C",
-            temperature->state
+            id(temperature).state
           );

@@ -14,8 +14,8 @@ sprinkler:
       on_turn_on:
         - lambda: |-
             #ifdef HAS_DISPLAY
-            ${display_id}->show_page(${display_page_when_active});
-            ${display_backlight_id}->turn_on();
+            id(${display_id}).show_page(${display_page_when_active});
+            id(${display_backlight_id}).turn_on();
             #endif
         - light.turn_on: ${led_id}
       on_turn_off:
@@ -28,7 +28,7 @@ sprinkler:
         - light.turn_off: ${led_id}
         - lambda: |-
             #ifdef HAS_DISPLAY
-            ${display_backlight_id}->turn_off();
+            id(${display_backlight_id}).turn_off();
             #endif
     auto_advance_switch: "Lawn sprinklers Auto Advance"
     standby_switch:
@@ -102,8 +102,8 @@ sprinkler:
       on_turn_on:
         - lambda: |-
             #ifdef HAS_DISPLAY
-            ${display_id}->show_page(${display_page_when_active});
-            ${display_backlight_id}->turn_on();
+            id(${display_id}).show_page(${display_page_when_active});
+            id(${display_backlight_id}).turn_on();
             #endif
         - light.turn_on: ${led_id}
       on_turn_off:
@@ -116,7 +116,7 @@ sprinkler:
         - light.turn_off: ${led_id}
         - lambda: |-
             #ifdef HAS_DISPLAY
-            ${display_backlight_id}->turn_off();
+            id(${display_backlight_id}).turn_off();
             #endif
     auto_advance_switch: "Flowerbed sprinklers Auto Advance"
     standby_switch:

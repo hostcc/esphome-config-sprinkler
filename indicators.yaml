@@ -32,27 +32,27 @@ light:
       - lambda: |-
           #include "esphome/components/sprinkler/sprinkler.h"
           if (
-            lawn_sprinklers->controller_state()
+            id(lawn_sprinklers).controller_state()
               != esphome::sprinkler::SprinklerState::IDLE
-            || flowerbed_sprinklers->controller_state()
+            || id(flowerbed_sprinklers).controller_state()
               != esphome::sprinkler::SprinklerState::IDLE
           ) {
-            auto call = ${led_id}->turn_on();
+            auto call = id(${led_id}).turn_on();
             call.set_effect("pulse_2hz");
             call.set_color_brightness(${led_brightness});
             call.set_rgb(1.0, 0.4, 0.9);
             call.perform();
             return;
           };
-          if (${rain_sensor_id}->state) {
-            auto call = ${led_id}->turn_on();
+          if (id(${rain_sensor_id}).state) {
+            auto call = id(${led_id}).turn_on();
             call.set_effect("pulse_slow");
             call.set_color_brightness(${led_brightness});
             call.set_rgb(0.4, 1.0, 0.9);
             call.perform();
             return;
           };
-          ${led_id}->turn_on();
+          id(${led_id}).turn_on();
 
 status_led:
   pin:

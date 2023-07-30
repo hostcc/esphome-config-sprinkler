@@ -37,7 +37,7 @@ text_sensor:
     icon: "mdi:pump"
     update_interval: 5s
     lambda: |-
-      return { ${pump_relay_id}->state ? "Active" : "Idle" };
+      return { id(${pump_relay_id}).state ? "Active" : "Idle" };
   - platform: template
     entity_category: diagnostic
     id: tank_refill_state
@@ -45,7 +45,7 @@ text_sensor:
     icon: "mdi:pipe-valve"
     update_interval: 5s
     lambda: |-
-      return { ${refill_tank_relay_id}->state ? "Active" : "Idle" };
+      return { id(${refill_tank_relay_id}).state ? "Active" : "Idle" };
   - platform: template
     id: lawn_sprinklers_next_schedule
     name: "Lawn sprinklers: next schedule"
@@ -54,7 +54,7 @@ text_sensor:
     entity_category: diagnostic
     lambda: |-
       #ifdef HAS_SCHEDULE
-      auto next_schedule = lawn_schedule->get_next_schedule();
+      auto next_schedule = id(lawn_schedule).get_next_schedule();
        if (next_schedule.has_value())
          return { next_schedule.value().strftime("%c") };
       #endif
@@ -67,7 +67,7 @@ text_sensor:
     entity_category: diagnostic
     lambda: |-
       #ifdef HAS_SCHEDULE
-      auto next_schedule = flowerbed_schedule->get_next_schedule();
+      auto next_schedule = id(flowerbed_schedule).get_next_schedule();
        if (next_schedule.has_value())
          return { next_schedule.value().strftime("%c") };
       #endif
