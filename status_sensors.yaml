@@ -72,3 +72,21 @@ text_sensor:
          return { next_schedule.value().strftime("%c") };
       #endif
       return { "N/A" };
+  - platform: template
+    id: lawn_sprinklers_run_time_remaining
+    name: "Lawn sprinklers: run time remaining"
+    icon: "mdi:timer-sand"
+    update_interval: 1${run_duration_uom}
+    lambda: !include
+      file: script_controller_run_time_remaining.yaml
+      vars:
+        sprinkler: lawn_sprinklers
+  - platform: template
+    id: flowerbed_sprinklers_run_time_remaining
+    name: "Flowerbed sprinklers: run time remaining"
+    icon: "mdi:timer-sand"
+    update_interval: 1${run_duration_uom}
+    lambda: !include
+      file: script_controller_run_time_remaining.yaml
+      vars:
+        sprinkler: flowerbed_sprinklers

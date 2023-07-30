@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: Apache-1.0
+# Copyright (c) 2023 Ilia Sotnikov
+---
+!lambda |-
+  auto time_remaining =
+    id(${sprinkler}).time_remaining_active_valve().value_or(0);
+
+  if (time_remaining > 0) {
+    auto remaining_hours = time_remaining / 3600;
+    auto remaining_minutes = time_remaining / 60;
+    auto remaining_seconds = time_remaining % 60;
+
+    return
+      to_string(remaining_hours) + "h "
+      + to_string(remaining_minutes) + "m "
+      + to_string(remaining_seconds) + "s";
+  }
+
+  return { "N/A" };
