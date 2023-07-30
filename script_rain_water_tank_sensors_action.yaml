@@ -4,6 +4,7 @@
 !lambda |-
   // Define preprocessor macro after entity triggered the script for
   // conditionals
+  #include "esphome/core/log.h"
   #define TRIGGERED_BY_${triggered_by}
 
   // Handle rain detected or water tank is empty
@@ -17,16 +18,12 @@
       #else
       "Pausing"
       #endif
-      , ${rain_sensor_id}->state ? "ON": "OFF"
-      , ${water_tank_empty_id}->state ? "ON": "OFF"
+      , ONOFF(${rain_sensor_id}->state)
+      , ONOFF(${water_tank_empty_id}->state)
     );
 
-    // Put sprinklers into standby mode
-    flowerbed_sprinklers_standby_switch->turn_on();
-    lawn_sprinklers_standby_switch->turn_on();
-
-    // Shutdown any running operation in case of rain, also turn on LED
-    // indicating the condition
+    // Explicitly shutdown any running operation in case of rain, also turn on
+    // LED indicating the condition
     #ifdef TRIGGERED_BY_${rain_sensor_id}
     ${led_id}->turn_on();
     flowerbed_sprinklers->shutdown();
@@ -35,10 +32,17 @@
 
     // Pause any active operation if water tank is empty, so it could resume
     // once it becomes full
+    // NOTE: `pause()` should be called before activating controller's standby
+    // switch, since it internally calls `shutdown` thus active valve will be
+    // lost
     #ifdef TRIGGERED_BY_${water_tank_empty_id}
     flowerbed_sprinklers->pause();
     lawn_sprinklers->pause();
     #endif
+
+    // Put sprinklers into standby mode
+    flowerbed_sprinklers_standby_switch->turn_on();
+    lawn_sprinklers_standby_switch->turn_on();
 
     #ifdef HAS_DISPLAY
     ${display_id}->update();
@@ -63,6 +67,8 @@
   #endif
 
   // Resume any operation if any once water tank is full
+  // NOTE: should be called after moving controller out of standby otherwise
+  // `resume()` will do nothing
   #ifdef TRIGGERED_BY_${water_tank_empty_id}
   ESP_LOGI("${triggered_by}", "Resuming sprinklers");
   flowerbed_sprinklers->resume();
