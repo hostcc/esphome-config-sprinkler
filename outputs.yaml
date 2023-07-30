@@ -38,7 +38,7 @@ switch:
   - platform: output
     name: Buzzer
     output: buzzer
-    entity_category: config
+    internal: true
 
 output:
   - platform: rp2040_pwm
