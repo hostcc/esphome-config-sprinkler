@@ -1,6 +1,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2023 Ilia Sotnikov
 ---
+esphome:
+  platformio_options:
+    build_flags:
+      # Define the preprocessor macro indicating presence of schedule
+      # components so that dependent code could be conditional
+      - '-DHAS_SCHEDULE'
+
 switch:
   # Schedule, lawn sprinklers
   - platform: template
