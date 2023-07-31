@@ -18,7 +18,6 @@ if:
         format: Triggering water tank refill
         tag: ${sprinkler}
         level: INFO
-    - sprinkler.pause: ${sprinkler}
     - switch.turn_on: ${relay}
     - lambda: |-
         #ifdef HAS_DISPLAY
@@ -26,7 +25,6 @@ if:
         #endif
     - delay: ${refill_relay_pulse_duration}
     - switch.turn_off: ${relay}
-    - sprinkler.resume: ${sprinkler}
     - lambda: |-
         #ifdef HAS_DISPLAY
         id(${display_id}).update();
