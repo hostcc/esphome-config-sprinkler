@@ -6,7 +6,7 @@ if:
     lambda: |-
       #include "esphome/core/component.h"
       return
-        ${condition}
+        (${condition})
         // Ignore the fragment being triggered during 'sprinkler' component
         // setup when its switches are turned off initially (would be redundant)
         && (id(${sprinkler}).get_component_state() & COMPONENT_STATE_LOOP)
