@@ -24,7 +24,9 @@ sprinkler:
           vars:
             sprinkler: lawn_sprinklers
             relay: ${refill_tank_relay_id}
-            condition: '!${refill_tank_after_each_valve}'
+            condition: >-
+              !id(disable_water_tank_refill).state
+              && !id(water_tank_refill_after_each_valve).state
         - light.turn_off: ${led_id}
         - lambda: |-
             #ifdef HAS_DISPLAY
@@ -47,7 +49,9 @@ sprinkler:
             vars:
               sprinkler: lawn_sprinklers
               relay: ${refill_tank_relay_id}
-              condition: ${refill_tank_after_each_valve}
+              condition: >-
+                !id(disable_water_tank_refill).state
+                && id(water_tank_refill_after_each_valve).state
         enable_switch: "Enable south lawn"
         run_duration_number:
           name: "South lawn run duration"
@@ -65,7 +69,9 @@ sprinkler:
             vars:
               sprinkler: lawn_sprinklers
               relay: ${refill_tank_relay_id}
-              condition: ${refill_tank_after_each_valve}
+              condition: >-
+                !id(disable_water_tank_refill).state
+                && id(water_tank_refill_after_each_valve).state
         enable_switch: "Enable north lawn"
         run_duration_number:
           name: "North lawn run duration"
@@ -83,7 +89,9 @@ sprinkler:
             vars:
               sprinkler: lawn_sprinklers
               relay: ${refill_tank_relay_id}
-              condition: ${refill_tank_after_each_valve}
+              condition: >-
+                !id(disable_water_tank_refill).state
+                && id(water_tank_refill_after_each_valve).state
         enable_switch: "Enable west lawn"
         run_duration_number:
           name: "West lawn run duration"
@@ -112,7 +120,9 @@ sprinkler:
           vars:
             sprinkler: flowerbed_sprinklers
             relay: ${refill_tank_relay_id}
-            condition: '!${refill_tank_after_each_valve}'
+            condition: >-
+              !id(disable_water_tank_refill).state
+              && !id(water_tank_refill_after_each_valve).state
         - light.turn_off: ${led_id}
         - lambda: |-
             #ifdef HAS_DISPLAY
@@ -135,7 +145,9 @@ sprinkler:
             vars:
               sprinkler: flowerbed_sprinklers
               relay: ${refill_tank_relay_id}
-              condition: ${refill_tank_after_each_valve}
+              condition: >-
+                !id(disable_water_tank_refill).state
+                && id(water_tank_refill_after_each_valve).state
         enable_switch: "Enable south flowerbed"
         run_duration_number:
           name: "South flowerbed run duration"
@@ -153,7 +165,9 @@ sprinkler:
             vars:
               sprinkler: flowerbed_sprinklers
               relay: ${refill_tank_relay_id}
-              condition: ${refill_tank_after_each_valve}
+              condition: >-
+                !id(disable_water_tank_refill).state
+                && id(water_tank_refill_after_each_valve).state
         enable_switch: "Enable west flowerbed"
         run_duration_number:
           name: "West flowerbed"
@@ -163,3 +177,27 @@ sprinkler:
           unit_of_measurement: ${run_duration_uom}
         valve_switch_id: relay_5
         pump_switch_id: ${pump_relay_id}
+
+switch:
+  - platform: template
+    id: disable_water_tank_refill
+    name: "Disable water tank refill"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+  - platform: template
+    id: water_tank_refill_after_each_valve
+    name: "Water tank refill after each valve"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+
+button:
+  - platform: template
+    name: "Lawn sprinklers: shutdown"
+    on_press:
+      - sprinkler.shutdown: lawn_sprinklers
+  - platform: template
+    name: "Flowerbed sprinklers: shutdown"
+    on_press:
+      - sprinkler.shutdown: lawn_sprinklers
