@@ -1,0 +1,48 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2023 Ilia Sotnikov
+---
+# https://www.waveshare.com/wiki/Pico-Relay-B
+switch:
+  - platform: gpio
+    pin: GPIO21
+    internal: true
+    id: relay_1
+  - platform: gpio
+    pin: GPIO20
+    internal: true
+    id: relay_2
+  - platform: gpio
+    pin: GPIO19
+    internal: true
+    id: relay_3
+  - platform: gpio
+    pin: GPIO18
+    internal: true
+    id: relay_4
+  - platform: gpio
+    pin: GPIO17
+    internal: true
+    id: relay_5
+  - platform: gpio
+    pin: GPIO16
+    internal: true
+    id: relay_6
+  - platform: gpio
+    pin: GPIO15
+    internal: true
+    id: ${refill_tank_relay_id}
+  - platform: gpio
+    pin: GPIO14
+    id: ${pump_relay_id}
+    internal: true
+  - platform: output
+    name: Buzzer
+    output: buzzer
+    internal: true
+
+output:
+  - platform: rp2040_pwm
+    pin: GPIO6
+    # This gives ~2KHz output, by a reason this frequency is not in Hz
+    frequency: 8000000
+    id: buzzer

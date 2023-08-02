@@ -1,0 +1,92 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2023 Ilia Sotnikov
+---
+sensor:
+  - platform: internal_temperature
+    id: temperature
+    name: "Internal Temperature"
+    icon: "mdi:thermometer"
+    entity_category: diagnostic
+    update_interval: 60s
+
+text_sensor:
+  - platform: template
+    id: lawn_sprinklers_state
+    name: "Lawn sprinklers state"
+    icon: "mdi:state-machine"
+    entity_category: diagnostic
+    lambda: !include
+      file: script_controller_status.yaml
+      vars:
+        sprinkler: lawn_sprinklers
+    update_interval: 5s
+  - platform: template
+    id: flowerbed_sprinklers_state
+    entity_category: diagnostic
+    name: "Flowerbed sprinklers state"
+    icon: "mdi:state-machine"
+    lambda: !include
+      file: script_controller_status.yaml
+      vars:
+        sprinkler: flowerbed_sprinklers
+    update_interval: 5s
+  - platform: template
+    entity_category: diagnostic
+    id: pump_state
+    name: "Pump state"
+    icon: "mdi:pump"
+    update_interval: 5s
+    lambda: |-
+      return { id(${pump_relay_id}).state ? "Active" : "Idle" };
+  - platform: template
+    entity_category: diagnostic
+    id: tank_refill_state
+    name: "Tank refill state"
+    icon: "mdi:pipe-valve"
+    update_interval: 5s
+    lambda: |-
+      return { id(${refill_tank_relay_id}).state ? "Active" : "Idle" };
+  - platform: template
+    id: lawn_sprinklers_next_schedule
+    name: "Lawn sprinklers: next schedule"
+    icon: "mdi:alarm"
+    update_interval: 5s
+    entity_category: diagnostic
+    lambda: |-
+      #ifdef HAS_SCHEDULE
+      auto next_schedule = id(lawn_schedule).get_next_schedule();
+       if (next_schedule.has_value())
+         return { next_schedule.value().strftime("%c") };
+      #endif
+      return { "N/A" };
+  - platform: template
+    id: flowerbed_sprinklers_next_schedule
+    name: "Flowerbed sprinklers: next schedule"
+    icon: "mdi:alarm"
+    update_interval: 5s
+    entity_category: diagnostic
+    lambda: |-
+      #ifdef HAS_SCHEDULE
+      auto next_schedule = id(flowerbed_schedule).get_next_schedule();
+       if (next_schedule.has_value())
+         return { next_schedule.value().strftime("%c") };
+      #endif
+      return { "N/A" };
+  - platform: template
+    id: lawn_sprinklers_run_time_remaining
+    name: "Lawn sprinklers: run time remaining"
+    icon: "mdi:timer-sand"
+    update_interval: 1${run_duration_uom}
+    lambda: !include
+      file: script_controller_run_time_remaining.yaml
+      vars:
+        sprinkler: lawn_sprinklers
+  - platform: template
+    id: flowerbed_sprinklers_run_time_remaining
+    name: "Flowerbed sprinklers: run time remaining"
+    icon: "mdi:timer-sand"
+    update_interval: 1${run_duration_uom}
+    lambda: !include
+      file: script_controller_run_time_remaining.yaml
+      vars:
+        sprinkler: flowerbed_sprinklers

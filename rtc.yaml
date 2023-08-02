@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2023 Ilia Sotnikov
+---
+i2c:
+  sda: GPIO8
+  scl: GPIO9
+  scan: true
+
+time:
+  - platform: ds1307
+    id: ${rtc_id}
+
+esphome:
+  platformio_options:
+    build_flags:
+      # Define the preprocessor macro indicating presence of DS1307 so that
+      # dependent code could be conditional
+      - '-DHAS_RTC'
+
+  on_boot:
+    then:
+      ds1307.read_time:
+        id: ${rtc_id}

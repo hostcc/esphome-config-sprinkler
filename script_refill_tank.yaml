@@ -1,0 +1,31 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2023 Ilia Sotnikov
+---
+if:
+  condition:
+    lambda: |-
+      #include "esphome/core/component.h"
+      return
+        (${condition})
+        // Ignore the fragment being triggered during 'sprinkler' component
+        // setup when its switches are turned off initially (would be redundant)
+        && (id(${sprinkler}).get_component_state() & COMPONENT_STATE_LOOP)
+        // Ignore attempt to refill the tank when it has already been reported
+        // as empty (would be redundant)
+        && !id(${water_tank_empty_id}).state;
+  then:
+    - logger.log:
+        format: Triggering water tank refill
+        tag: ${sprinkler}
+        level: INFO
+    - switch.turn_on: ${relay}
+    - lambda: |-
+        #ifdef HAS_DISPLAY
+        id(${display_id}).update();
+        #endif
+    - delay: ${refill_relay_pulse_duration}
+    - switch.turn_off: ${relay}
+    - lambda: |-
+        #ifdef HAS_DISPLAY
+        id(${display_id}).update();
+        #endif

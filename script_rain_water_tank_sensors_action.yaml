@@ -1,0 +1,85 @@
+# SPDX-License-Identifier: Apache-1.0
+# Copyright (c) 2023 Ilia Sotnikov
+---
+!lambda |-
+  // Define preprocessor macro after entity triggered the script for
+  // conditionals
+  #include "esphome/core/log.h"
+  #define TRIGGERED_BY_${triggered_by}
+
+  // Handle rain detected or water tank is empty
+  if (id(${rain_sensor_id}).state || id(${water_tank_empty_id}).state) {
+    ESP_LOGI(
+      "${triggered_by}",
+      "%s sprinklers and putting them in standby"
+      " (rain sensor state: %s, water tank empty state: %s)",
+      #ifdef TRIGGERED_BY_${rain_sensor_id}
+      "Stopping"
+      #else
+      "Pausing"
+      #endif
+      , ONOFF(id(${rain_sensor_id}).state)
+      , ONOFF(id(${water_tank_empty_id}).state)
+    );
+
+    // Explicitly shutdown any running operation in case of rain, also turn on
+    // LED indicating the condition
+    #ifdef TRIGGERED_BY_${rain_sensor_id}
+    id(${led_id}).turn_on();
+    id(flowerbed_sprinklers).shutdown();
+    id(lawn_sprinklers).shutdown();
+    #endif
+
+    // Pause any active operation if water tank is empty, so it could resume
+    // once it becomes full
+    // NOTE: `pause()` should be called before activating controller's standby
+    // switch, since it internally calls `shutdown` thus active valve will be
+    // lost
+    #ifdef TRIGGERED_BY_${water_tank_empty_id}
+    id(flowerbed_sprinklers).pause();
+    id(lawn_sprinklers).pause();
+    #endif
+
+    // Put sprinklers into standby mode
+    id(flowerbed_sprinklers_standby_switch).turn_on();
+    id(lawn_sprinklers_standby_switch).turn_on();
+
+    #ifdef HAS_DISPLAY
+    id(${display_id}).update();
+    #endif
+
+    // Any active condition above is terminating, i.e. if one sensor is active
+    // stopping/pausing won't be reverted by processing another sensor being
+    // inactive
+    return;
+  }
+
+  ESP_LOGI(
+    "${triggered_by}", "Putting sprinklers out of standby"
+  );
+  // Move sprinklers out of standby mode
+  id(flowerbed_sprinklers_standby_switch).turn_off();
+  id(lawn_sprinklers_standby_switch).turn_off();
+
+  // Turn off LED indicating that rain is detected
+  #ifdef TRIGGERED_BY_${rain_sensor_id}
+  id(${led_id}).turn_off();
+  #endif
+
+  // Resume any operation if any once water tank is full
+  // NOTE: should be called after moving controller out of standby otherwise
+  // `resume()` will do nothing
+  #ifdef TRIGGERED_BY_${water_tank_empty_id}
+  ESP_LOGI("${triggered_by}", "Resuming sprinklers");
+  id(flowerbed_sprinklers).resume();
+  id(lawn_sprinklers).resume();
+  #endif
+
+  #ifdef HAS_DISPLAY
+  id(${display_id}).update();
+  #endif
+
+  // Preprocessor macros lack scope so undefine the macro for another script
+  // instance to have proper conditionals (i.e. prevent wrongly evaluating
+  // macro for another triggering entity has own macro defined)
+  #undef TRIGGERED_BY_${triggered_by}

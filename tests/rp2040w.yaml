@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2023 Ilia Sotnikov
+
+# Minimal configuration to validate via ESPHome
+---
+esphome:
+  name: test-2040w
+
+rp2040:
+  board: rpipicow
+  framework:
+    platform_version: https://github.com/maxgerhardt/platform-raspberrypi.git
+
+api:
+wifi:
+  ap:
+
+packages:
+  main: !include
+    file: ../main.yaml

@@ -1,0 +1,220 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2023 Ilia Sotnikov
+---
+esphome:
+  platformio_options:
+    build_flags:
+      # Define the preprocessor macro indicating presence of schedule
+      # components so that dependent code could be conditional
+      - '-DHAS_SCHEDULE'
+
+switch:
+  # Schedule, lawn sprinklers
+  - platform: template
+    id: lawn_sprinklers_mon
+    name: "Lawn sprinklers: Mon"
+    icon: "mdi:calendar"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+  - platform: template
+    id: lawn_sprinklers_tue
+    name: "Lawn sprinklers: Tue"
+    icon: "mdi:calendar"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+  - platform: template
+    id: lawn_sprinklers_wed
+    name: "Lawn sprinklers: Wed"
+    icon: "mdi:calendar"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+  - platform: template
+    id: lawn_sprinklers_thu
+    name: "Lawn sprinklers: Thu"
+    icon: "mdi:calendar"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+  - platform: template
+    id: lawn_sprinklers_fri
+    name: "Lawn sprinklers: Fri"
+    icon: "mdi:calendar"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+  - platform: template
+    id: lawn_sprinklers_sat
+    name: "Lawn sprinklers: Sat"
+    icon: "mdi:calendar"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+  - platform: template
+    id: lawn_sprinklers_sun
+    name: "Lawn sprinklers: Sun"
+    icon: "mdi:calendar"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+
+  # Schedule, flowerbed sprinklers
+  - platform: template
+    id: flowerbed_sprinklers_mon
+    name: "Flowerbed sprinklers: Mon"
+    icon: "mdi:calendar"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+  - platform: template
+    id: flowerbed_sprinklers_tue
+    name: "Flowerbed sprinklers: Tue"
+    icon: "mdi:calendar"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+  - platform: template
+    id: flowerbed_sprinklers_wed
+    name: "Flowerbed sprinklers: Wed"
+    icon: "mdi:calendar"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+  - platform: template
+    id: flowerbed_sprinklers_thu
+    name: "Flowerbed sprinklers: Thu"
+    icon: "mdi:calendar"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+  - platform: template
+    id: flowerbed_sprinklers_fri
+    name: "Flowerbed sprinklers: Fri"
+    icon: "mdi:calendar"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+  - platform: template
+    id: flowerbed_sprinklers_sat
+    name: "Flowerbed sprinklers: Sat"
+    icon: "mdi:calendar"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+  - platform: template
+    id: flowerbed_sprinklers_sun
+    name: "Flowerbed sprinklers: Sun"
+    icon: "mdi:calendar"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+
+number:
+  # Schedule, lawn sprinklers
+  - platform: template
+    id: lawn_sprinklers_hour
+    name: "Lawn sprinklers: Hour"
+    icon: "mdi:clock"
+    entity_category: config
+    optimistic: true
+    restore_value: true
+    initial_value: 0
+    min_value: 0
+    max_value: 23
+    step: 1
+    mode: box
+  - platform: template
+    name: "Lawn sprinklers: Minute"
+    icon: "mdi:clock"
+    id: lawn_sprinklers_minute
+    entity_category: config
+    optimistic: true
+    restore_value: true
+    initial_value: 0
+    min_value: 0
+    max_value: 59
+    step: 1
+    mode: box
+
+  # Schedule, flowerbed sprinklers
+  - platform: template
+    name: "Flowerbed sprinklers: Hour"
+    icon: "mdi:clock"
+    id: flowerbed_sprinklers_hour
+    entity_category: config
+    optimistic: true
+    restore_value: true
+    initial_value: 0
+    min_value: 0
+    max_value: 23
+    step: 1
+    mode: box
+  - platform: template
+    name: "Flowerbed sprinklers: Minute"
+    icon: "mdi:clock"
+    id: flowerbed_sprinklers_minute
+    entity_category: config
+    optimistic: true
+    restore_value: true
+    initial_value: 0
+    min_value: 0
+    max_value: 59
+    step: 1
+    mode: box
+
+external_components:
+  source: github://hostcc/esphome-component-dynamic-on-time@main
+
+dynamic_on_time:
+  - id: lawn_schedule
+    rtc: ${rtc_id}
+    hour: lawn_sprinklers_hour
+    minute: lawn_sprinklers_minute
+    mon: lawn_sprinklers_mon
+    tue: lawn_sprinklers_tue
+    wed: lawn_sprinklers_wed
+    thu: lawn_sprinklers_thu
+    fri: lawn_sprinklers_fri
+    sat: lawn_sprinklers_sat
+    sun: lawn_sprinklers_sun
+    on_time:
+      - logger.log:
+          format: 'schedule: Waiting for water tank to be full'
+          tag: lawn_sprinklers
+          level: 'INFO'
+      - wait_until:
+          condition:
+            binary_sensor.is_off: ${water_tank_empty_id}
+          timeout: ${scheduled_start_wait_tank_full_duration}
+      - logger.log:
+          format: 'schedule: Starting full sprinkler cycle'
+          tag: lawn_sprinklers
+          level: 'INFO'
+      - sprinkler.start_full_cycle: lawn_sprinklers
+  - id: flowerbed_schedule
+    rtc: ${rtc_id}
+    hour: flowerbed_sprinklers_hour
+    minute: flowerbed_sprinklers_minute
+    mon: flowerbed_sprinklers_mon
+    tue: flowerbed_sprinklers_tue
+    wed: flowerbed_sprinklers_wed
+    thu: flowerbed_sprinklers_thu
+    fri: flowerbed_sprinklers_fri
+    sat: flowerbed_sprinklers_sat
+    sun: flowerbed_sprinklers_sun
+    on_time:
+      - logger.log:
+          format: 'schedule: Waiting for water tank to be full'
+          tag: flowerbed
+          level: 'INFO'
+      - wait_until:
+          condition:
+            binary_sensor.is_off: ${water_tank_empty_id}
+          timeout: ${scheduled_start_wait_tank_full_duration}
+      - logger.log:
+          format: 'schedule: Starting full sprinkler cycle'
+          tag: flowerbed
+          level: 'INFO'
+      - sprinkler.start_full_cycle: flowerbed_sprinklers

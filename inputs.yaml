@@ -1,0 +1,67 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2023 Ilia Sotnikov
+---
+binary_sensor:
+  - platform: gpio
+    id: ${rain_sensor_id}
+    pin:
+      number: GPIO0
+      mode:
+        pullup: true
+        input: true
+      inverted: ${rain_sensor_inverted}
+    name: "Rain sensor"
+    icon: "mdi:weather-pouring"
+    filters:
+      - delayed_on: 100ms
+      - delayed_off: 100ms
+    on_state:
+      then:
+        - lambda: !include
+            file: script_rain_water_tank_sensors_action.yaml
+            vars:
+              triggered_by: ${rain_sensor_id}
+
+  - platform: gpio
+    id: ${water_tank_empty_id}
+    pin:
+      number: GPIO1
+      mode:
+        pullup: true
+        input: true
+      inverted: ${water_tank_empty_inverted}
+    name: "Water tank empty"
+    icon: "mdi:water-off"
+    filters:
+      - delayed_on: 100ms
+      - delayed_off: 100ms
+    on_state:
+      then:
+        - lambda: !include
+            file: script_rain_water_tank_sensors_action.yaml
+            vars:
+              triggered_by: ${water_tank_empty_id}
+  - platform: gpio
+    internal: true
+    pin:
+      number: GPIO4
+      mode:
+        pullup: true
+        input: true
+      inverted: true
+    name: "Sensor 3"
+    filters:
+      - delayed_on: 100ms
+      - delayed_off: 100ms
+  - platform: gpio
+    internal: true
+    pin:
+      number: GPIO5
+      mode:
+        pullup: true
+        input: true
+      inverted: true
+    name: "Sensor 4"
+    filters:
+      - delayed_on: 100ms
+      - delayed_off: 100ms

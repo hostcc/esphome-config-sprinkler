@@ -1,0 +1,192 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2023 Ilia Sotnikov
+---
+esphome:
+  # Required for HW SPI
+  min_version: '2023.6.2'
+  platformio_options:
+    build_flags:
+      # Define the preprocessor macro indicating presence of display so that
+      # dependent code could be conditional
+      - '-DHAS_DISPLAY'
+
+spi:
+  clk_pin: GPIO2
+  mosi_pin: GPIO3
+  force_sw: false
+
+switch:
+  - platform: gpio
+    pin: GPIO22
+    internal: true
+    id: ${display_backlight_id}
+    inverted: true
+
+font:
+  - file:
+      type: gfonts
+      family: Ubuntu Mono
+      weight: regular
+    id: primary
+    size: 14
+    glyphs:
+      '+-:.°/% 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+  - file:
+      type: gfonts
+      family: Material Symbols Outlined
+      weight: regular
+    id: material
+    size: 24
+    glyphs:
+      - "\U00000020"
+      - "\U0000f176"  # Rainy
+      - "\U0000e81a"  # Sunny
+      - "\U0000f6d6"  # Water full
+      - "\U0000f6d5"  # Water loss
+      - "\U0000e224"  # Valve
+      - "\U0000f5d8"  # Water pump
+      - "\U0000e5d3"  # More horiz
+      - "\U0000e63e"  # Wifi
+      - "\U0000e648"  # Wifi off
+      - "\U0000e1ff"  # Device thermostat
+  - file:
+      type: gfonts
+      family: Material Symbols Outlined
+      weight: regular
+    id: material_small
+    size: 13
+    glyphs:
+      - "\U0000e157"  # Link
+      - "\U0000e16f"  # Link off
+      - "\U0000e425"  # Timer
+      - "\U0000e089"  # Start
+
+interval:
+  - interval: ${display_page_show_duration}
+    then:
+      - if:
+          condition:
+            - lambda: |-
+                #include <esphome/components/sprinkler/sprinkler.h>
+
+                return
+                  id(lawn_sprinklers).controller_state()
+                    == esphome::sprinkler::SprinklerState::IDLE
+                  && id(flowerbed_sprinklers).controller_state()
+                    == esphome::sprinkler::SprinklerState::IDLE;
+          then:
+            - display.page.show_next: ${display_id}
+            - component.update: ${display_id}
+
+display:
+  - platform: pcd8544
+    id: ${display_id}
+    reset_pin: GPIO7
+    cs_pin: GPIO10
+    dc_pin: GPIO11
+    contrast: 0xff
+    rotation: ${display_rotation}
+    # Make display updates every second so information is up to date
+    update_interval: 1s
+    pages:
+      - id: display_page1
+        lambda: |-
+          #include "esphome/components/api/api_server.h"
+          using namespace esphome::api;
+
+          // Day of week and time
+          it.strftime(
+            84, 0, primary, TextAlign::TOP_RIGHT, "%a %H:%M",
+            id(${rtc_id}).now()
+          );
+
+          // Symbol indicating if a client is connected over API
+          it.printf(
+            0, 0, material_small, TextAlign::TOP_LEFT, "%s",
+            global_api_server && global_api_server->is_connected()
+              ? "\U0000e157" : "\U0000e16f"
+          );
+
+          // Symbols indicating state of water tank emptiness and rain sensor
+          it.printf(
+            42, 22, material, TextAlign::TOP_CENTER, "%s%s%s",
+            id(${water_tank_empty_id}).state ? "\U0000f6d5": "\U0000f6d6",
+            id(${rain_sensor_id}).state ? "\U0000f176" : "\U0000e81a",
+            id(${refill_tank_relay_id}).state ? "\U0000e224" : ""
+          );
+
+          // Run time remaining
+          auto time_remaining =
+            max(
+              id(lawn_sprinklers).time_remaining_active_valve().value_or(0),
+              id(flowerbed_sprinklers).time_remaining_active_valve().value_or(0)
+            );
+
+          if (time_remaining > 0) {
+            auto remaining_hours = time_remaining / 3600;
+            auto remaining_minutes = time_remaining / 60;
+            auto remaining_seconds = time_remaining % 60;
+
+            // Symbol indicating run time remaining
+            it.print(0, 12, material_small, TextAlign::TOP_LEFT, "\U0000e425");
+
+            it.printf(
+              84, 12, primary, TextAlign::TOP_RIGHT, "%02u:%02u:%02u",
+              remaining_hours, remaining_minutes, remaining_seconds
+            );
+          } else {
+            // Symbol indicating next start time
+            it.print(0, 12, material_small, TextAlign::TOP_LEFT, "\U0000e089");
+
+            auto lawn_next_schedule =
+              id(lawn_schedule).get_next_schedule();
+            auto flowerbed_next_schedule =
+              id(flowerbed_schedule).get_next_schedule();
+
+            if (!lawn_next_schedule.has_value()
+               && !flowerbed_next_schedule.has_value()) {
+                // None of schedules are set
+                it.print(84, 12, primary, TextAlign::TOP_RIGHT, "--- --:--");
+            } else {
+              it.strftime(
+                84, 12, primary, TextAlign::TOP_RIGHT, "%a %H:%M",
+                // Direct comparison of two `optional<ESPTime>` doesn't work
+                // (seems `ESPTime` lacks `<` over two `const ESPTime` inferred
+                // by `optional` operator `<`), so include checking if first
+                // optional has value otherwise pick the second one. Note
+                // either of optionals would have a value, see condition above
+                // applicable when they aren't
+                lawn_next_schedule
+                && lawn_next_schedule.value() < flowerbed_next_schedule.value()
+                ? lawn_next_schedule.value()
+                : flowerbed_next_schedule.value()
+              );
+            }
+          }
+
+      - id: display_page2
+        lambda: |-
+          #include "esphome/components/wifi/wifi_component.h"
+          using namespace esphome::wifi;
+
+          // Symbol indicating whether WiFi is connected and its signal level
+          // if yes
+          if (global_wifi_component && global_wifi_component->is_connected()) {
+            it.print(
+              0, 14, material, TextAlign::CENTER_LEFT, "\U0000e63e");
+            it.printf(
+              84, 14, primary, TextAlign::CENTER_RIGHT, "%i dBm",
+              global_wifi_component->wifi_rssi()
+            );
+
+          } else {
+            it.print(0, 14, material, TextAlign::CENTER_LEFT, "\U0000e648");
+            it.print(84, 14, primary, TextAlign::CENTER_RIGHT, " ");
+          }
+
+          // Symbol and value of the internal temperature sensor
+          it.print( 0, 36, material, TextAlign::CENTER_LEFT, "\U0000e1ff");
+          it.printf(
+            84, 36, primary, TextAlign::CENTER_RIGHT, "%.1f C",
+            id(temperature).state
+          );

@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2023 Ilia Sotnikov
+---
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+    on_time_sync:
+      - lambda: |-
+          #ifdef HAS_RTC
+          id(${rtc_id}).write_time();
+          #endif

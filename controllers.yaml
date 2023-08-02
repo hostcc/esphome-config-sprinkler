@@ -1,0 +1,203 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2023 Ilia Sotnikov
+---
+esphome:
+  # Required for proper resume handling
+  min_version: '2023.7.0'
+
+sprinkler:
+  - id: lawn_sprinklers
+    main_switch:
+      name: "Lawn sprinklers"
+      icon: "mdi:sprinkler"
+      id: lawn_sprinklers_main_switch
+      on_turn_on:
+        - lambda: |-
+            #ifdef HAS_DISPLAY
+            id(${display_id}).show_page(${display_page_when_active});
+            id(${display_backlight_id}).turn_on();
+            #endif
+        - light.turn_on: ${led_id}
+      on_turn_off:
+        - !include
+          file: script_refill_tank.yaml
+          vars:
+            sprinkler: lawn_sprinklers
+            relay: ${refill_tank_relay_id}
+            condition: >-
+              !id(disable_water_tank_refill).state
+              && !id(water_tank_refill_after_each_valve).state
+        - light.turn_off: ${led_id}
+        - lambda: |-
+            #ifdef HAS_DISPLAY
+            id(${display_backlight_id}).turn_off();
+            #endif
+    auto_advance_switch: "Lawn sprinklers Auto Advance"
+    standby_switch:
+      name: "Pause lawn sprinklers"
+      id: lawn_sprinklers_standby_switch
+      internal: true
+    valve_overlap: ${valve_overlap}
+    pump_start_pump_delay: ${pump_start_pump_delay}
+    pump_stop_valve_delay: ${pump_stop_valve_delay}
+    valves:
+      - valve_switch:
+          name: "South lawn"
+          icon: "mdi:sprinkler"
+          on_turn_off: !include
+            file: script_refill_tank.yaml
+            vars:
+              sprinkler: lawn_sprinklers
+              relay: ${refill_tank_relay_id}
+              condition: >-
+                !id(disable_water_tank_refill).state
+                && id(water_tank_refill_after_each_valve).state
+        enable_switch: "Enable south lawn"
+        run_duration_number:
+          name: "South lawn run duration"
+          icon: "mdi:timer"
+          initial_value: ${run_duration_initial_value}
+          restore_value: true
+          unit_of_measurement: ${run_duration_uom}
+        valve_switch_id: relay_1
+        pump_switch_id: ${pump_relay_id}
+      - valve_switch:
+          name: "North lawn"
+          icon: "mdi:sprinkler"
+          on_turn_off: !include
+            file: script_refill_tank.yaml
+            vars:
+              sprinkler: lawn_sprinklers
+              relay: ${refill_tank_relay_id}
+              condition: >-
+                !id(disable_water_tank_refill).state
+                && id(water_tank_refill_after_each_valve).state
+        enable_switch: "Enable north lawn"
+        run_duration_number:
+          name: "North lawn run duration"
+          icon: "mdi:timer"
+          initial_value: ${run_duration_initial_value}
+          restore_value: true
+          unit_of_measurement: ${run_duration_uom}
+        valve_switch_id: relay_2
+        pump_switch_id: ${pump_relay_id}
+      - valve_switch:
+          name: "West lawn"
+          icon: "mdi:sprinkler"
+          on_turn_off: !include
+            file: script_refill_tank.yaml
+            vars:
+              sprinkler: lawn_sprinklers
+              relay: ${refill_tank_relay_id}
+              condition: >-
+                !id(disable_water_tank_refill).state
+                && id(water_tank_refill_after_each_valve).state
+        enable_switch: "Enable west lawn"
+        run_duration_number:
+          name: "West lawn run duration"
+          icon: "mdi:timer"
+          initial_value: ${run_duration_initial_value}
+          restore_value: true
+          unit_of_measurement: ${run_duration_uom}
+        valve_switch_id: relay_3
+        pump_switch_id: ${pump_relay_id}
+
+  - id: flowerbed_sprinklers
+    main_switch:
+      name: "Flowerbed sprinklers"
+      icon: "mdi:sprinkler"
+      id: flowerbed_sprinklers_main_switch
+      on_turn_on:
+        - lambda: |-
+            #ifdef HAS_DISPLAY
+            id(${display_id}).show_page(${display_page_when_active});
+            id(${display_backlight_id}).turn_on();
+            #endif
+        - light.turn_on: ${led_id}
+      on_turn_off:
+        - !include
+          file: script_refill_tank.yaml
+          vars:
+            sprinkler: flowerbed_sprinklers
+            relay: ${refill_tank_relay_id}
+            condition: >-
+              !id(disable_water_tank_refill).state
+              && !id(water_tank_refill_after_each_valve).state
+        - light.turn_off: ${led_id}
+        - lambda: |-
+            #ifdef HAS_DISPLAY
+            id(${display_backlight_id}).turn_off();
+            #endif
+    auto_advance_switch: "Flowerbed sprinklers Auto Advance"
+    standby_switch:
+      name: "Pause flowerbed sprinklers"
+      id: flowerbed_sprinklers_standby_switch
+      internal: true
+    valve_overlap: ${valve_overlap}
+    pump_start_pump_delay: ${pump_start_pump_delay}
+    pump_stop_valve_delay: ${pump_stop_valve_delay}
+    valves:
+      - valve_switch:
+          name: "South flowerbed"
+          icon: "mdi:sprinkler"
+          on_turn_off: !include
+            file: script_refill_tank.yaml
+            vars:
+              sprinkler: flowerbed_sprinklers
+              relay: ${refill_tank_relay_id}
+              condition: >-
+                !id(disable_water_tank_refill).state
+                && id(water_tank_refill_after_each_valve).state
+        enable_switch: "Enable south flowerbed"
+        run_duration_number:
+          name: "South flowerbed run duration"
+          icon: "mdi:timer"
+          initial_value: ${run_duration_initial_value}
+          restore_value: true
+          unit_of_measurement: ${run_duration_uom}
+        valve_switch_id: relay_4
+        pump_switch_id: ${pump_relay_id}
+      - valve_switch:
+          name: "West flowerbed"
+          icon: "mdi:sprinkler"
+          on_turn_off: !include
+            file: script_refill_tank.yaml
+            vars:
+              sprinkler: flowerbed_sprinklers
+              relay: ${refill_tank_relay_id}
+              condition: >-
+                !id(disable_water_tank_refill).state
+                && id(water_tank_refill_after_each_valve).state
+        enable_switch: "Enable west flowerbed"
+        run_duration_number:
+          name: "West flowerbed"
+          icon: "mdi:timer"
+          initial_value: ${run_duration_initial_value}
+          restore_value: true
+          unit_of_measurement: ${run_duration_uom}
+        valve_switch_id: relay_5
+        pump_switch_id: ${pump_relay_id}
+
+switch:
+  - platform: template
+    id: disable_water_tank_refill
+    name: "Disable water tank refill"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+  - platform: template
+    id: water_tank_refill_after_each_valve
+    name: "Water tank refill after each valve"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+
+button:
+  - platform: template
+    name: "Lawn sprinklers: shutdown"
+    on_press:
+      - sprinkler.shutdown: lawn_sprinklers
+  - platform: template
+    name: "Flowerbed sprinklers: shutdown"
+    on_press:
+      - sprinkler.shutdown: lawn_sprinklers
