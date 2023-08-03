@@ -59,6 +59,13 @@ switch:
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
+  - platform: template
+    id: lawn_sprinklers_disabled
+    name: "Lawn sprinklers: disable schedule"
+    icon: "mdi:calendar-remove"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
 
   # Schedule, flowerbed sprinklers
   - platform: template
@@ -107,6 +114,13 @@ switch:
     id: flowerbed_sprinklers_sun
     name: "Flowerbed sprinklers: Sun"
     icon: "mdi:calendar"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+  - platform: template
+    id: flowerbed_sprinklers_disabled
+    name: "Flowerbed sprinklers: disable schedule"
+    icon: "mdi:calendar-remove"
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
@@ -165,7 +179,7 @@ number:
     mode: box
 
 external_components:
-  source: github://hostcc/esphome-component-dynamic-on-time@main
+  source: github://hostcc/esphome-component-dynamic-on-time@1.1.0
 
 dynamic_on_time:
   - id: lawn_schedule
@@ -179,6 +193,7 @@ dynamic_on_time:
     fri: lawn_sprinklers_fri
     sat: lawn_sprinklers_sat
     sun: lawn_sprinklers_sun
+    disabled: lawn_sprinklers_disabled
     on_time:
       - logger.log:
           format: 'schedule: Waiting for water tank to be full'
@@ -204,6 +219,7 @@ dynamic_on_time:
     fri: flowerbed_sprinklers_fri
     sat: flowerbed_sprinklers_sat
     sun: flowerbed_sprinklers_sun
+    disabled: flowerbed_sprinklers_disabled
     on_time:
       - logger.log:
           format: 'schedule: Waiting for water tank to be full'
