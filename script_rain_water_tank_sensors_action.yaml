@@ -25,7 +25,8 @@
     // Explicitly shutdown any running operation in case of rain, also turn on
     // LED indicating the condition
     #ifdef TRIGGERED_BY_${rain_sensor_id}
-    id(${led_id}).turn_on();
+    auto call = id(${led_id}).turn_on();
+    call.perform();
     id(flowerbed_sprinklers).shutdown();
     id(lawn_sprinklers).shutdown();
     #endif
@@ -63,7 +64,8 @@
 
   // Turn off LED indicating that rain is detected
   #ifdef TRIGGERED_BY_${rain_sensor_id}
-  id(${led_id}).turn_off();
+  auto call = id(${led_id}).turn_off();
+  call.perform();
   #endif
 
   // Resume any operation if any once water tank is full
