@@ -120,8 +120,9 @@ the image below).
 
 Include following fragment to your ESPHome configuration (`sprinkler` name of
 the package could be anything), it is recommended to use specific release
-version (see [Releases](/releases)) to ensure your configuration is stable over
-the time.
+version (see
+[Releases](https://github.com/hostcc/esphome-config-sprinkler/releases)) to
+ensure your configuration is stable over the time.
 
 ```yaml
 packages:
