@@ -130,10 +130,10 @@ packages:
 ```
 
 The configuration could further be adjusted using substitutions, see
-[main.yaml] for details.
+[main.yaml](main.yaml) for details.
 
 You can also remove certain portions of the configuration marked as `Optional`
-in [main.yaml] if you don't have particular hardware or need to use that
+in [main.yaml](main.yaml) if you don't have particular hardware or need to use that
 functionality.
 
 
