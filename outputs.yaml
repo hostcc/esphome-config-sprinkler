@@ -30,7 +30,7 @@ switch:
   - platform: gpio
     pin: GPIO15
     internal: true
-    id: ${refill_tank_relay_id}
+    id: ${peripherals_power_off_relay_id}
   - platform: gpio
     pin: GPIO14
     id: ${pump_relay_id}

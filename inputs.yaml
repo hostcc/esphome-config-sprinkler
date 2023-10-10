@@ -15,6 +15,7 @@ binary_sensor:
     filters:
       - delayed_on: 100ms
       - delayed_off: 100ms
+    publish_initial_state: true
     on_state:
       then:
         - lambda: !include
@@ -35,6 +36,7 @@ binary_sensor:
     filters:
       - delayed_on: 100ms
       - delayed_off: 100ms
+    publish_initial_state: true
     on_state:
       then:
         - lambda: !include
@@ -53,6 +55,7 @@ binary_sensor:
     filters:
       - delayed_on: 100ms
       - delayed_off: 100ms
+    publish_initial_state: true
   - platform: gpio
     internal: true
     pin:
@@ -65,3 +68,4 @@ binary_sensor:
     filters:
       - delayed_on: 100ms
       - delayed_off: 100ms
+    publish_initial_state: true

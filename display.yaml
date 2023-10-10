@@ -112,7 +112,7 @@ display:
             42, 22, material, TextAlign::TOP_CENTER, "%s%s%s",
             id(${water_tank_empty_id}).state ? "\U0000f6d5": "\U0000f6d6",
             id(${rain_sensor_id}).state ? "\U0000f176" : "\U0000e81a",
-            id(${refill_tank_relay_id}).state ? "\U0000e224" : ""
+            id(${peripherals_power_off_relay_id}).state ? "\U0000e224" : ""
           );
 
           // Run time remaining

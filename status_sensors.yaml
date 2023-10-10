@@ -40,12 +40,14 @@ text_sensor:
       return { id(${pump_relay_id}).state ? "Active" : "Idle" };
   - platform: template
     entity_category: diagnostic
-    id: tank_refill_state
-    name: "Tank refill state"
-    icon: "mdi:pipe-valve"
+    id: peripherals_power_state
+    name: "Peripherals power"
+    icon: "mdi:flash-triangle-outline"
     update_interval: 5s
     lambda: |-
-      return { id(${refill_tank_relay_id}).state ? "Active" : "Idle" };
+      return {
+        id(${peripherals_power_off_relay_id}).state ? "Off" : "On"
+      };
   - platform: template
     id: lawn_sprinklers_next_schedule
     name: "Lawn sprinklers: next schedule"
