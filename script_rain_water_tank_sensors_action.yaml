@@ -7,6 +7,14 @@
   #include "esphome/core/log.h"
   #define TRIGGERED_BY_${triggered_by}
 
+  // No further manipulations if winter mode is enabled
+  if (id(winter_mode).state) {
+    ESP_LOGI(
+      "${triggered_by}", "Winter mode active, ignoring further actions"
+    );
+    return;
+  }
+
   // Handle rain detected or water tank is empty
   if (id(${rain_sensor_id}).state || id(${water_tank_empty_id}).state) {
     ESP_LOGI(

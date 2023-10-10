@@ -12,7 +12,9 @@ if:
         && (id(${sprinkler}).get_component_state() & COMPONENT_STATE_LOOP)
         // Ignore attempt to refill the tank when it has already been reported
         // as empty (would be redundant)
-        && !id(${water_tank_empty_id}).state;
+        && !id(${water_tank_empty_id}).state
+        // Ignore attempt to refill the tank if controller is in standby
+        && !id(${sprinkler}).standby();
   then:
     - logger.log:
         format: Triggering water tank refill
@@ -23,7 +25,7 @@ if:
         #ifdef HAS_DISPLAY
         id(${display_id}).update();
         #endif
-    - delay: ${refill_relay_pulse_duration}
+    - delay: ${peripherals_power_refill_pulse_duration}
     - switch.turn_off: ${relay}
     - lambda: |-
         #ifdef HAS_DISPLAY

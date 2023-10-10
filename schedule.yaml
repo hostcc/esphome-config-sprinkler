@@ -66,6 +66,11 @@ switch:
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
+    lambda: |-
+      // Prevent enabling schedule if winter mode is active
+      if (id(winter_mode).state)
+        return true;
+      return {};
 
   # Schedule, flowerbed sprinklers
   - platform: template
@@ -124,6 +129,11 @@ switch:
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
+    lambda: |-
+      // See above
+      if (id(winter_mode).state)
+        return true;
+      return {};
 
 number:
   # Schedule, lawn sprinklers
