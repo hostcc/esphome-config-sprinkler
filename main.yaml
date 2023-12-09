@@ -36,7 +36,6 @@ packages:
   time: !include time.yaml  # Optional
   rtc: !include rtc.yaml  # Optional
 
-# Recent ESPHome versions are needed to avoid crashing at startup when winter
-# mode enabled
+# 2023.10.0 addresses Pillow security vulnerability
 esphome:
-  min_version: 2023.10.0
+  min_version: '2023.10.0'
