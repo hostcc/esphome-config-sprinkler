@@ -4,6 +4,7 @@
 time:
   - platform: homeassistant
     id: homeassistant_time
+    timezone: ${timezone}
     on_time_sync:
       - lambda: |-
           #ifdef HAS_RTC

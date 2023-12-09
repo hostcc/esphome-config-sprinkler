@@ -23,6 +23,7 @@ substitutions:
   display_id: display1
   display_rotation: '0'
   rtc_id: rtc_time
+  timezone: UTC
 
 packages:
   outputs: !include outputs.yaml
@@ -35,11 +36,7 @@ packages:
   time: !include time.yaml  # Optional
   rtc: !include rtc.yaml  # Optional
 
-# Both recent ESPHome version and PR below are needed to avoid crashing at
-# startup when winter mode enabled
+# Recent ESPHome versions are needed to avoid crashing at startup when winter
+# mode enabled
 esphome:
-  min_version: 2023.9.3
-
-external_components:
-  - source: github://pr#5499
-    components: [sprinkler]
+  min_version: 2023.10.0
