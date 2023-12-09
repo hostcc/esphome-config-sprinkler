@@ -8,6 +8,7 @@ i2c:
 
 time:
   - platform: ds1307
+    timezone: ${timezone}
     id: ${rtc_id}
 
 esphome:

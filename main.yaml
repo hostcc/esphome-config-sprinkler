@@ -23,6 +23,7 @@ substitutions:
   display_id: display1
   display_rotation: '0'
   rtc_id: rtc_time
+  timezone: UTC
 
 packages:
   outputs: !include outputs.yaml
