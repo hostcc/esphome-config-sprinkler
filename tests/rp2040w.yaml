@@ -3,6 +3,9 @@
 
 # Minimal configuration to validate via ESPHome
 ---
+logger:
+  level: debug
+
 esphome:
   name: test-2040w
 
