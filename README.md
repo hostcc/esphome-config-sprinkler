@@ -105,7 +105,7 @@ Optionally:
 ### Pico-Relay-B hardware modifications
 
 The stock Pico-Relay-B lacks GPIO exposed via a terminal - those are needed to
-connect rain sensor and water tank empty one, the crew terminal (4 pins) has
+connect rain sensor and water tank empty one, the screw terminal (4 pins) has
 been added (lower left corner).
 
 Also, the hardware initially had no RTC, DS3231 has been added (top left
@@ -124,7 +124,23 @@ version (see
 [Releases](https://github.com/hostcc/esphome-config-sprinkler/releases)) to
 ensure your configuration is stable over the time.
 
+A temperature sensor is a prerequisite to the configuration, its ID should be
+passed via `temperature_sensor_id` substitution - it is only used by display
+component currently.
+
+
 ```yaml
+substitutions:
+  temperature_sensor_id: temperature_sensor
+
+sensor:
+  - platform: internal_temperature
+    id: ${temperature_sensor_id}
+    name: "Internal Temperature"
+    icon: "mdi:thermometer"
+    entity_category: diagnostic
+    update_interval: 60s
+
 packages:
   sprinkler: github://hostcc/esphome-config-sprinkler/main.yaml@<release version>
 ```
