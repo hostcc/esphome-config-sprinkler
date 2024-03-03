@@ -188,5 +188,5 @@ display:
           it.print( 0, 36, material, TextAlign::CENTER_LEFT, "\U0000e1ff");
           it.printf(
             84, 36, primary, TextAlign::CENTER_RIGHT, "%.1f C",
-            id(temperature).state
+            id(${temperature_sensor_id}).state
           );

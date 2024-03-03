@@ -3,6 +3,9 @@
 
 # Minimal configuration to validate via ESPHome
 ---
+substitutions:
+  temperature_sensor_id: temperature_sensor
+
 logger:
   level: debug
 
@@ -17,6 +20,14 @@ rp2040:
 api:
 wifi:
   ap:
+
+sensor:
+  - platform: internal_temperature
+    id: ${temperature_sensor_id}
+    name: "Internal Temperature"
+    icon: "mdi:thermometer"
+    entity_category: diagnostic
+    update_interval: 60s
 
 packages:
   main: !include

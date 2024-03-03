@@ -24,6 +24,7 @@ substitutions:
   display_rotation: '0'
   rtc_id: rtc_time
   timezone: UTC
+  temperature_sensor_id: temperature
 
 packages:
   outputs: !include outputs.yaml
