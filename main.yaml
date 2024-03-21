@@ -37,6 +37,6 @@ packages:
   time: !include time.yaml  # Optional
   rtc: !include rtc.yaml  # Optional
 
-# 2024.2.0 addresses Pillow security vulnerability
+# 2024.3.0 addresses security vulnerability
 esphome:
-  min_version: '2024.2.0'
+  min_version: '2024.3.0'
