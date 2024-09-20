@@ -48,7 +48,7 @@ text_sensor:
     entity_category: diagnostic
     lambda: |-
       #ifdef HAS_SCHEDULE
-      auto next_schedule = id(lawn_schedule).get_next_schedule();
+      auto next_schedule = lawn_schedule->get_next_schedule();
        if (next_schedule.has_value())
          return { next_schedule.value().strftime("%c") };
       #endif
@@ -61,7 +61,7 @@ text_sensor:
     entity_category: diagnostic
     lambda: |-
       #ifdef HAS_SCHEDULE
-      auto next_schedule = id(flowerbed_schedule).get_next_schedule();
+      auto next_schedule = flowerbed_schedule->get_next_schedule();
        if (next_schedule.has_value())
          return { next_schedule.value().strftime("%c") };
       #endif

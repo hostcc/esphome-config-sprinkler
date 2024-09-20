@@ -29,7 +29,7 @@ substitutions:
 packages:
   outputs: !include outputs.yaml
   inputs: !include inputs.yaml
-  schedule: !include schedule.yaml
+  schedule: !include schedule.yaml  # Optional
   display: !include display.yaml  # Optional
   indicators: !include indicators.yaml
   controllers: !include controllers.yaml

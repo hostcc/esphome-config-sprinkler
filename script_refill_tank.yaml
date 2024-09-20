@@ -23,11 +23,15 @@ if:
     - switch.turn_on: ${relay}
     - lambda: |-
         #ifdef HAS_DISPLAY
-        id(${display_id}).update();
+        if (${display_id}->is_ready()) {
+          ${display_id}->update();
+        }
         #endif
     - delay: ${peripherals_power_refill_pulse_duration}
     - switch.turn_off: ${relay}
     - lambda: |-
         #ifdef HAS_DISPLAY
-        id(${display_id}).update();
+        if (${display_id}->is_ready()) {
+          ${display_id}->update();
+        }
         #endif
