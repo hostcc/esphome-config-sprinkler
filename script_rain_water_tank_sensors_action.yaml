@@ -54,7 +54,9 @@
     id(lawn_sprinklers_standby_switch).turn_on();
 
     #ifdef HAS_DISPLAY
-    id(${display_id}).update();
+    if (${display_id}->is_ready()) {
+      ${display_id}->update();
+    }
     #endif
 
     // Any active condition above is terminating, i.e. if one sensor is active
@@ -86,7 +88,9 @@
   #endif
 
   #ifdef HAS_DISPLAY
-  id(${display_id}).update();
+  if (${display_id}->is_ready()) {
+    ${display_id}->update();
+  }
   #endif
 
   // Preprocessor macros lack scope so undefine the macro for another script

@@ -97,7 +97,7 @@ display:
           // Day of week and time
           it.strftime(
             84, 0, primary, TextAlign::TOP_RIGHT, "%a %H:%M",
-            id(${rtc_id}).now()
+            ${rtc_id}->now()
           );
 
           // Symbol indicating if a client is connected over API
@@ -116,10 +116,11 @@ display:
           );
 
           // Run time remaining
+          #ifdef HAS_SCHEDULE
           auto time_remaining =
             max(
-              id(lawn_sprinklers).time_remaining_active_valve().value_or(0),
-              id(flowerbed_sprinklers).time_remaining_active_valve().value_or(0)
+              lawn_sprinklers->time_remaining_active_valve().value_or(0),
+              flowerbed_sprinklers->time_remaining_active_valve().value_or(0)
             );
 
           if (time_remaining > 0) {
@@ -139,9 +140,9 @@ display:
             it.print(0, 12, material_small, TextAlign::TOP_LEFT, "\U0000e089");
 
             auto lawn_next_schedule =
-              id(lawn_schedule).get_next_schedule();
+              lawn_schedule->get_next_schedule();
             auto flowerbed_next_schedule =
-              id(flowerbed_schedule).get_next_schedule();
+              flowerbed_schedule->get_next_schedule();
 
             if (!lawn_next_schedule.has_value()
                && !flowerbed_next_schedule.has_value()) {
@@ -163,6 +164,7 @@ display:
               );
             }
           }
+          #endif
 
       - id: display_page2
         lambda: |-

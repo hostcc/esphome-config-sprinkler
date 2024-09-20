@@ -8,5 +8,5 @@ time:
     on_time_sync:
       - lambda: |-
           #ifdef HAS_RTC
-          id(${rtc_id}).write_time();
+          ${rtc_id}->write_time();
           #endif

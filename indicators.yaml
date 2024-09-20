@@ -53,8 +53,3 @@ light:
             return;
           };
           id(${led_id}).turn_on();
-
-status_led:
-  pin:
-    number: LED
-    inverted: true
