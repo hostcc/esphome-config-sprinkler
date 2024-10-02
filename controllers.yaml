@@ -20,7 +20,11 @@ sprinkler:
             }
             ${display_backlight_id}->turn_on();
             #endif
-        - light.turn_on: ${led_id}
+        - lambda: |-
+            #ifdef HAS_RGB_LED
+            auto call = ${led_id}->turn_on();
+            call.perform();
+            #endif
       on_turn_off:
         - !include
           file: script_refill_tank.yaml
@@ -30,7 +34,11 @@ sprinkler:
             condition: >-
               !id(disable_water_tank_refill).state
               && !id(water_tank_refill_after_each_valve).state
-        - light.turn_off: ${led_id}
+        - lambda: |-
+            #ifdef HAS_RGB_LED
+            auto call = ${led_id}->turn_off();
+            call.perform();
+            #endif
         - lambda: |-
             #ifdef HAS_DISPLAY
             ${display_backlight_id}->turn_off();
@@ -118,7 +126,11 @@ sprinkler:
             }
             ${display_backlight_id}->turn_on();
             #endif
-        - light.turn_on: ${led_id}
+        - lambda: |-
+            #ifdef HAS_RGB_LED
+            auto call = ${led_id}->turn_on();
+            call.perform();
+            #endif
       on_turn_off:
         - !include
           file: script_refill_tank.yaml
@@ -128,7 +140,11 @@ sprinkler:
             condition: >-
               !id(disable_water_tank_refill).state
               && !id(water_tank_refill_after_each_valve).state
-        - light.turn_off: ${led_id}
+        - lambda: |-
+            #ifdef HAS_RGB_LED
+            auto call = ${led_id}->turn_off();
+            call.perform();
+            #endif
         - lambda: |-
             #ifdef HAS_DISPLAY
             ${display_backlight_id}->turn_off();
