@@ -31,7 +31,7 @@ packages:
   inputs: !include inputs.yaml
   schedule: !include schedule.yaml  # Optional
   display: !include display.yaml  # Optional
-  indicators: !include indicators.yaml
+  indicators: !include indicators.yaml  # Optional
   controllers: !include controllers.yaml
   status_sensors: !include status_sensors.yaml
   time: !include time.yaml  # Optional

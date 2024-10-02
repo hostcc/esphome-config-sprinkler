@@ -4,6 +4,11 @@
 esphome:
   # Required for 'rp2040_pio_led_strip' component
   min_version: '2023.6.2'
+  platformio_options:
+    build_flags:
+      # Define the preprocessor macro indicating presence of RGB led so that
+      # dependent code could be conditional
+      - '-DHAS_RGB_LED'
 
 light:
   - platform: rp2040_pio_led_strip
