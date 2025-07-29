@@ -169,7 +169,6 @@ display:
       - id: display_page2
         lambda: |-
           #include <esphome/components/wifi/wifi_component.h>
-          
           using namespace esphome::wifi;
 
           // Symbol indicating whether WiFi is connected and its signal level
