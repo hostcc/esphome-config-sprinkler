@@ -35,7 +35,7 @@ light:
           update_interval: 2s
     on_turn_on:
       - lambda: |-
-          #include "esphome/components/sprinkler/sprinkler.h"
+          #include <esphome/components/sprinkler/sprinkler.h>
           if (
             id(lawn_sprinklers).controller_state()
               != esphome::sprinkler::SprinklerState::IDLE

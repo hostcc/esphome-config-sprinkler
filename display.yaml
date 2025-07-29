@@ -91,7 +91,7 @@ display:
     pages:
       - id: display_page1
         lambda: |-
-          #include "esphome/components/api/api_server.h"
+          #include <esphome/components/api/api_server.h>
           using namespace esphome::api;
 
           // Day of week and time
@@ -168,7 +168,8 @@ display:
 
       - id: display_page2
         lambda: |-
-          #include "esphome/components/wifi/wifi_component.h"
+          #include <esphome/components/wifi/wifi_component.h>
+          
           using namespace esphome::wifi;
 
           // Symbol indicating whether WiFi is connected and its signal level

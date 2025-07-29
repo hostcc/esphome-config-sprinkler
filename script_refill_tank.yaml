@@ -4,7 +4,7 @@
 if:
   condition:
     lambda: |-
-      #include "esphome/core/component.h"
+      #include <esphome/core/component.h>
       return
         (${condition})
         // Ignore the fragment being triggered during 'sprinkler' component
