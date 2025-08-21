@@ -189,7 +189,7 @@ number:
     mode: box
 
 external_components:
-  - source: github://hostcc/esphome-component-dynamic-on-time@1.1.0
+  - source: github://hostcc/esphome-component-dynamic-on-time@1.1.1
 
 dynamic_on_time:
   - id: lawn_schedule
