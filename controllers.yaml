@@ -229,8 +229,8 @@ switch:
           id(flowerbed_sprinklers_standby_switch).turn_on();
           #ifdef HAS_SCHEDULE
           // Disable scheduled runs
-          lawn_sprinklers_disabled->turn_on();
-          flowerbed_sprinklers_disabled->turn_on();
+          lawn_sprinklers_disabled_aggregate->turn_on();
+          flowerbed_sprinklers_disabled_aggregate->turn_on();
           #endif
           // Turn off peripherals power (water level relay and alike)
           id(${peripherals_power_off_relay_id}).turn_on();
@@ -240,9 +240,9 @@ switch:
           id(flowerbed_sprinklers_standby_switch).turn_off();
           id(lawn_sprinklers_standby_switch).turn_off();
           #ifdef HAS_SCHEDULE
-          // Enabled scheduled runs
-          lawn_sprinklers_disabled->turn_off();
-          flowerbed_sprinklers_disabled->turn_off();
+          // Enable scheduled runs
+          lawn_sprinklers_disabled_aggregate->turn_off();
+          flowerbed_sprinklers_disabled_aggregate->turn_off();
           #endif
           // Enable peripherals power
           id(${peripherals_power_off_relay_id}).turn_off();

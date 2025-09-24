@@ -66,11 +66,20 @@ switch:
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
+  # Internal switch that aggregates state of winter mode and the user-visible
+  # switch above. The intermediate entity is needed to prevent winter mode from
+  # affecting the state of the schedule might have been set by the user
+  - platform: template
+    id: lawn_sprinklers_disabled_aggregate
+    internal: true
+    optimistic: true
+    restore_mode: DISABLED
     lambda: |-
       // Prevent enabling schedule if winter mode is active
       if (id(winter_mode).state)
         return true;
-      return {};
+      // Otherwise, follow the state of the switch above
+      return id(lawn_sprinklers_disabled).state;
 
   # Schedule, flowerbed sprinklers
   - platform: template
@@ -129,11 +138,17 @@ switch:
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
+  # See comment above on its purpose
+  - platform: template
+    id: flowerbed_sprinklers_disabled_aggregate
+    internal: true
+    optimistic: true
+    restore_mode: DISABLED
     lambda: |-
       // See above
       if (id(winter_mode).state)
         return true;
-      return {};
+      return id(flowerbed_sprinklers_disabled).state;
 
 number:
   # Schedule, lawn sprinklers
@@ -203,7 +218,7 @@ dynamic_on_time:
     fri: lawn_sprinklers_fri
     sat: lawn_sprinklers_sat
     sun: lawn_sprinklers_sun
-    disabled: lawn_sprinklers_disabled
+    disabled: lawn_sprinklers_disabled_aggregate
     on_time:
       - logger.log:
           format: 'schedule: Waiting for water tank to be full'
@@ -229,7 +244,7 @@ dynamic_on_time:
     fri: flowerbed_sprinklers_fri
     sat: flowerbed_sprinklers_sat
     sun: flowerbed_sprinklers_sun
-    disabled: flowerbed_sprinklers_disabled
+    disabled: flowerbed_sprinklers_disabled_aggregate
     on_time:
       - logger.log:
           format: 'schedule: Waiting for water tank to be full'
