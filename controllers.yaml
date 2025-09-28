@@ -220,10 +220,16 @@ switch:
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
     turn_on_action:
+      # Shutdown active operations on controllers if any
+      - lambda: !include
+          file: script_reset_controller.yaml
+          vars:
+            sprinkler: lawn_sprinklers
+      - lambda: !include
+          file: script_reset_controller.yaml
+          vars:
+            sprinkler: flowerbed_sprinklers
       - lambda: |-
-          // Shutdown active operations on controllers if any
-          id(lawn_sprinklers).shutdown();
-          id(flowerbed_sprinklers).shutdown();
           // Put controllers into standby
           id(lawn_sprinklers_standby_switch).turn_on();
           id(flowerbed_sprinklers_standby_switch).turn_on();
@@ -263,8 +269,15 @@ button:
   - platform: template
     name: "Lawn sprinklers: shutdown"
     on_press:
-      - sprinkler.shutdown: lawn_sprinklers
+      - lambda: !include
+          file: script_reset_controller.yaml
+          vars:
+            sprinkler: lawn_sprinklers
+
   - platform: template
     name: "Flowerbed sprinklers: shutdown"
     on_press:
-      - sprinkler.shutdown: flowerbed_sprinklers
+      - lambda: !include
+          file: script_reset_controller.yaml
+          vars:
+            sprinkler: flowerbed_sprinklers
