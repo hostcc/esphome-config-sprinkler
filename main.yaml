@@ -1,42 +1,15 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2023 Ilia Sotnikov
 ---
-substitutions:
-  run_duration_uom: s
-  run_duration_initial_value: '5'
-  rain_sensor_id: rain_sensor
-  rain_sensor_inverted: 'true'
-  water_tank_empty_id: water_tank_empty
-  water_tank_empty_inverted: 'true'
-  peripherals_power_off_relay_id: relay_7
-  pump_relay_id: relay_8
-  valve_overlap: 1s
-  pump_start_pump_delay: 1s
-  pump_stop_valve_delay: 1s
-  peripherals_power_refill_pulse_duration: 3s
-  scheduled_start_wait_tank_full_duration: 60s
-  led_id: led
-  led_brightness: '0.5'
-  display_backlight_id: display1_backlight
-  display_page_when_active: display_page1
-  display_page_show_duration: 3s
-  display_id: display1
-  display_rotation: '0'
-  rtc_id: rtc_time
-  timezone: UTC
-  temperature_sensor_id: temperature
-
 packages:
+  substitutions: !include substitutions.yaml
   outputs: !include outputs.yaml
-  inputs: !include inputs.yaml
-  schedule: !include schedule.yaml  # Optional
-  display: !include display.yaml  # Optional
-  indicators: !include indicators.yaml  # Optional
   controllers: !include controllers.yaml
   status_sensors: !include status_sensors.yaml
+  schedule: !include schedule.yaml  # Optional
   time: !include time.yaml  # Optional
-  rtc: !include rtc.yaml  # Optional
 
-# 2024.11.0 addresses security vulnerability
+# 2025.7.0 introduced change from `publish_initial_state` to
+# `trigger_on_initial_state` for `binary_sensor` component
 esphome:
-  min_version: '2024.11.0'
+  min_version: '2025.7.0'

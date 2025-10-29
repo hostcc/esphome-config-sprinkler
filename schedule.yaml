@@ -226,7 +226,12 @@ dynamic_on_time:
           level: 'INFO'
       - wait_until:
           condition:
-            binary_sensor.is_off: ${water_tank_empty_id}
+            lambda: |-
+              #ifdef HAS_CUSTOM_INPUTS
+              return !${water_tank_empty_id}->state;
+              #else
+              return true;
+              #endif
           timeout: ${scheduled_start_wait_tank_full_duration}
       - logger.log:
           format: 'schedule: Starting full sprinkler cycle'
@@ -252,7 +257,12 @@ dynamic_on_time:
           level: 'INFO'
       - wait_until:
           condition:
-            binary_sensor.is_off: ${water_tank_empty_id}
+            lambda: |-
+              #ifdef HAS_CUSTOM_INPUTS
+              return !${water_tank_empty_id}->state;
+              #else
+              return true;
+              #endif
           timeout: ${scheduled_start_wait_tank_full_duration}
       - logger.log:
           format: 'schedule: Starting full sprinkler cycle'

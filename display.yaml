@@ -11,6 +11,7 @@ esphome:
       - '-DHAS_DISPLAY'
 
 spi:
+  id: display_spi
   clk_pin: GPIO2
   mosi_pin: GPIO3
   interface: hardware
@@ -108,10 +109,20 @@ display:
           );
 
           // Symbols indicating state of water tank emptiness and rain sensor
+          #ifdef HAS_CUSTOM_INPUTS
           it.printf(
-            42, 22, material, TextAlign::TOP_CENTER, "%s%s%s",
-            id(${water_tank_empty_id}).state ? "\U0000f6d5": "\U0000f6d6",
-            id(${rain_sensor_id}).state ? "\U0000f176" : "\U0000e81a",
+            30, 22, material, TextAlign::TOP_CENTER,
+            "%s%s",
+            ${water_tank_empty_id}->state ? "\U0000f6d5": "\U0000f6d6",
+            ${rain_sensor_id}->state ? "\U0000f176" : "\U0000e81a"
+          );
+          #endif  // HAS_CUSTOM_INPUTS
+
+          // Symbol indicating state of peripherals power relay, same vertical
+          // position as the previous ones
+          it.printf(
+            66, 22, material, TextAlign::TOP_CENTER,
+            "%s",
             id(${peripherals_power_off_relay_id}).state ? "\U0000e224" : ""
           );
 
@@ -168,6 +179,7 @@ display:
 
       - id: display_page2
         lambda: |-
+          #ifdef USE_WIFI
           #include <esphome/components/wifi/wifi_component.h>
           using namespace esphome::wifi;
 
@@ -180,8 +192,10 @@ display:
               84, 14, primary, TextAlign::CENTER_RIGHT, "%i dBm",
               global_wifi_component->wifi_rssi()
             );
-
-          } else {
+          } else
+          #endif // USE_WIFI
+          // Always show WiFi disconnected symbol if WiFi is not used
+          {
             it.print(0, 14, material, TextAlign::CENTER_LEFT, "\U0000e648");
             it.print(84, 14, primary, TextAlign::CENTER_RIGHT, " ");
           }

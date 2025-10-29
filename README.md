@@ -118,6 +118,8 @@ the image below).
 
 ## How to use
 
+### Minimal configuration for the stock hardware
+
 Include following fragment to your ESPHome configuration (`sprinkler` name of
 the package could be anything), it is recommended to use specific release
 version (see
@@ -127,7 +129,6 @@ ensure your configuration is stable over the time.
 A temperature sensor is a prerequisite to the configuration, its ID should be
 passed via `temperature_sensor_id` substitution - it is only used by display
 component currently.
-
 
 ```yaml
 substitutions:
@@ -148,10 +149,21 @@ packages:
 The configuration could further be adjusted using substitutions, see
 [main.yaml](main.yaml) for details.
 
-You can also remove certain portions of the configuration marked as `Optional`
-in [main.yaml](main.yaml) if you don't have particular hardware or need to use that
-functionality.
+### Full configuration including optional components
 
+If you have optional hardware modifications (RTC, display) and would like to use it,
+you would rather use `full.yaml` instead of `main.yaml`:
+
+```yaml
+packages:
+  sprinkler: github://hostcc/esphome-config-sprinkler/full.yaml@<release version>
+```
+
+### Further customization
+
+You can also remove certain portions of the configuration marked as `Optional`
+in [full.yaml](full.yaml) and [main.yaml](main.yaml) if you don't have particular
+hardware or need to use that functionality.
 
 ## Sample installation
 

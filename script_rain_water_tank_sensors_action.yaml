@@ -15,8 +15,9 @@
     return;
   }
 
+  #ifdef HAS_CUSTOM_INPUTS
   // Handle rain detected or water tank is empty
-  if (id(${rain_sensor_id}).state || id(${water_tank_empty_id}).state) {
+  if (${rain_sensor_id}->state || ${water_tank_empty_id}->state) {
     ESP_LOGI(
       "${triggered_by}",
       "%s sprinklers and putting them in standby"
@@ -26,8 +27,8 @@
       #else
       "Pausing"
       #endif
-      , ONOFF(id(${rain_sensor_id}).state)
-      , ONOFF(id(${water_tank_empty_id}).state)
+      , ONOFF(${rain_sensor_id}->state)
+      , ONOFF(${water_tank_empty_id}->state)
     );
 
     // Explicitly shutdown any running operation in case of rain, also turn on
@@ -66,6 +67,7 @@
     // inactive
     return;
   }
+  #endif  // HAS_CUSTOM_INPUTS
 
   ESP_LOGI(
     "${triggered_by}", "Putting sprinklers out of standby"
