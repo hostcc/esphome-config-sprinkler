@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2023 Ilia Sotnikov
+---
+esphome:
+  platformio_options:
+    build_flags:
+      # Define the preprocessor macro indicating presence of buzzer
+      # components so that dependent code could be conditional
+      - '-DHAS_BUZZER'
+
+switch:
+  - platform: output
+    name: Buzzer
+    output: buzzer
+    internal: true
+
+output:
+  - platform: rp2040_pwm
+    pin: GPIO6
+    # This gives ~2KHz output, by a reason this frequency is not in Hz
+    frequency: 8000000
+    id: buzzer

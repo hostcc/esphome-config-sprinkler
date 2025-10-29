@@ -35,14 +35,3 @@ switch:
     pin: GPIO14
     id: ${pump_relay_id}
     internal: true
-  - platform: output
-    name: Buzzer
-    output: buzzer
-    internal: true
-
-output:
-  - platform: rp2040_pwm
-    pin: GPIO6
-    # This gives ~2KHz output, by a reason this frequency is not in Hz
-    frequency: 8000000
-    id: buzzer

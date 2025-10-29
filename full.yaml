@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2023 Ilia Sotnikov
+---
+packages:
+  minimal: !include main.yaml
+  # Optional packages, mostly for platform-specific or optional elements - the
+  # `main.yaml` being agnostic could also be used for tests on other platforms
+  # such as `host`
+  inputs: !include inputs.yaml
+  buzzer: !include buzzer.yaml
+  display: !include display.yaml
+  indicators: !include indicators.yaml
+  rtc: !include rtc.yaml

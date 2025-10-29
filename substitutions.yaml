@@ -1,0 +1,25 @@
+---
+substitutions:
+  run_duration_uom: s
+  run_duration_initial_value: '5'
+  rain_sensor_id: rain_sensor
+  rain_sensor_inverted: 'true'
+  water_tank_empty_id: water_tank_empty
+  water_tank_empty_inverted: 'true'
+  peripherals_power_off_relay_id: relay_7
+  pump_relay_id: relay_8
+  valve_overlap: 1s
+  pump_start_pump_delay: 1s
+  pump_stop_valve_delay: 1s
+  peripherals_power_refill_pulse_duration: 3s
+  scheduled_start_wait_tank_full_duration: 60s
+  led_id: led
+  led_brightness: '0.5'
+  display_backlight_id: display1_backlight
+  display_page_when_active: display_page1
+  display_page_show_duration: 3s
+  display_id: display1
+  display_rotation: '0'
+  rtc_id: rtc_time
+  timezone: UTC
+  temperature_sensor_id: temperature

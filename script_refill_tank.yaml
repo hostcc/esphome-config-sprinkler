@@ -10,9 +10,11 @@ if:
         // Ignore the fragment being triggered during 'sprinkler' component
         // setup when its switches are turned off initially (would be redundant)
         && (id(${sprinkler}).get_component_state() & COMPONENT_STATE_LOOP)
+        #ifdef HAS_CUSTOM_INPUTS
         // Ignore attempt to refill the tank when it has already been reported
         // as empty (would be redundant)
-        && !id(${water_tank_empty_id}).state
+        && !${water_tank_empty_id}->state
+        #endif  // HAS_CUSTOM_INPUTS
         // Ignore attempt to refill the tank if controller is in standby
         && !id(${sprinkler}).standby();
   then:

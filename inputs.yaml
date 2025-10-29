@@ -1,6 +1,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2023 Ilia Sotnikov
 ---
+esphome:
+  platformio_options:
+    build_flags:
+      # Define the preprocessor macro indicating presence of custom inputs
+      # so that dependent code could be conditional
+      - '-DHAS_CUSTOM_INPUTS'
+
 binary_sensor:
   - platform: gpio
     id: ${rain_sensor_id}
@@ -15,7 +22,8 @@ binary_sensor:
     filters:
       - delayed_on: 100ms
       - delayed_off: 100ms
-    publish_initial_state: true
+    # Renamed from `publish_initial_state` in ESPHome 2025.7.0
+    trigger_on_initial_state: true
     on_state:
       then:
         - lambda: !include
@@ -36,7 +44,8 @@ binary_sensor:
     filters:
       - delayed_on: 100ms
       - delayed_off: 100ms
-    publish_initial_state: true
+    # Same as above
+    trigger_on_initial_state: true
     on_state:
       then:
         - lambda: !include
@@ -55,7 +64,7 @@ binary_sensor:
     filters:
       - delayed_on: 100ms
       - delayed_off: 100ms
-    publish_initial_state: true
+    trigger_on_initial_state: true
   - platform: gpio
     internal: true
     pin:
@@ -68,4 +77,5 @@ binary_sensor:
     filters:
       - delayed_on: 100ms
       - delayed_off: 100ms
-    publish_initial_state: true
+    # Same as above
+    trigger_on_initial_state: true
