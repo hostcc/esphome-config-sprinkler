@@ -3,6 +3,7 @@
 ---
 packages:
   substitutions: !include substitutions.yaml
+  version: !include version.yaml
   outputs: !include outputs.yaml
   controllers: !include controllers.yaml
   status_sensors: !include status_sensors.yaml
