@@ -1,4 +1,5 @@
-
-  ---
-  substitutions:
-    sprinkler_config_version: '2.0.0'
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2025 Ilia Sotnikov
+---
+substitutions:
+  sprinkler_config_version: '0.0.0'
