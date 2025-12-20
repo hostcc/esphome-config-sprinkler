@@ -2,4 +2,4 @@
 # Copyright (c) 2025 Ilia Sotnikov
 ---
 substitutions:
-  sprinkler_config_version: '2.0.0'
+  sprinkler_config_version: '2.1.0'
