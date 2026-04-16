@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: Apache-1.0
 # Copyright (c) 2023 Ilia Sotnikov
 ---
-!lambda |-
+|-
   auto time_remaining =
     id(${sprinkler}).time_remaining_active_valve().value_or(0);
 

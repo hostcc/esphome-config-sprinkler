@@ -85,7 +85,8 @@ display:
     reset_pin: GPIO7
     cs_pin: GPIO10
     dc_pin: GPIO11
-    contrast: 0xff
+    # ESPHome 2026.4.0 enforces the documented 0..127 range.
+    contrast: 0x7f
     rotation: ${display_rotation}
     # Make display updates every second so information is up to date
     update_interval: 1s

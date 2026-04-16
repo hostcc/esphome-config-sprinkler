@@ -4,17 +4,17 @@
 if:
   condition:
     lambda: |-
-      #include <esphome/core/component.h>
+      %:include <esphome/core/component.h>
       return
         (${condition})
         // Ignore the fragment being triggered during 'sprinkler' component
         // setup when its switches are turned off initially (would be redundant)
         && (id(${sprinkler}).get_component_state() & COMPONENT_STATE_LOOP)
-        #ifdef HAS_CUSTOM_INPUTS
+        %:ifdef HAS_CUSTOM_INPUTS
         // Ignore attempt to refill the tank when it has already been reported
         // as empty (would be redundant)
         && !${water_tank_empty_id}->state
-        #endif  // HAS_CUSTOM_INPUTS
+        %:endif  // HAS_CUSTOM_INPUTS
         // Ignore attempt to refill the tank if controller is in standby
         && !id(${sprinkler}).standby();
   then:
@@ -24,16 +24,16 @@ if:
         level: INFO
     - switch.turn_on: ${relay}
     - lambda: |-
-        #ifdef HAS_DISPLAY
+        %:ifdef HAS_DISPLAY
         if (${display_id}->is_ready()) {
           ${display_id}->update();
         }
-        #endif
+        %:endif
     - delay: ${peripherals_power_refill_pulse_duration}
     - switch.turn_off: ${relay}
     - lambda: |-
-        #ifdef HAS_DISPLAY
+        %:ifdef HAS_DISPLAY
         if (${display_id}->is_ready()) {
           ${display_id}->update();
         }
-        #endif
+        %:endif
