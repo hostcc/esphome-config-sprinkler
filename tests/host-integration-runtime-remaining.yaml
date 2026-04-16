@@ -1,0 +1,72 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Ilia Sotnikov
+---
+globals:
+  - id: saw_runtime_remaining
+    type: bool
+    restore_value: no  # yamllint disable rule:truthy
+    initial_value: 'false'
+  - id: saw_runtime_remaining_na_after_active
+    type: bool
+    restore_value: no  # yamllint disable rule:truthy
+    initial_value: 'false'
+
+text_sensor:
+  - id: !extend lawn_sprinklers_run_time_remaining
+    update_interval: 200ms
+
+script:
+  - id: test_script
+    then:
+      - switch.turn_on: lawn_south_enable_switch
+      # Execute the same action sequence used by scheduled on_time trigger.
+      - script.execute: lawn_sprinklers_scheduled_cycle_start
+      - wait_until:
+          condition:
+            lambda: |-
+              return id(lawn_sprinklers).time_remaining_active_valve()
+                .value_or(0) > 0;
+          timeout: 5s
+      - wait_until:
+          condition:
+            lambda: |-
+              return id(lawn_sprinklers_run_time_remaining).state != "N/A";
+          timeout: 5s
+      - lambda: |-
+          id(saw_runtime_remaining) =
+            id(lawn_sprinklers_run_time_remaining).state != "N/A";
+      - wait_until:
+          condition:
+            lambda: return !id(lawn_sprinklers_main_switch).state;
+          timeout: 20s
+      - wait_until:
+          condition:
+            lambda: |-
+              return id(lawn_sprinklers_run_time_remaining).state == "N/A";
+          timeout: 15s
+      - lambda: |-
+          id(saw_runtime_remaining_na_after_active) =
+            id(lawn_sprinklers_run_time_remaining).state == "N/A";
+
+packages:
+  setup: !include
+    file: base/test_setup.yaml
+    vars:
+      test_name: test-host-int-runtime
+      run_duration_initial_value: '4'
+
+  perform: !include
+    file: base/test_perform.yaml
+    vars:
+      setup_script: test_script
+
+  validate: !include
+    file: base/test_validate.yaml
+    vars:
+      success_condition: >-
+        return id(saw_runtime_remaining)
+        && id(saw_runtime_remaining_na_after_active)
+        && id(lawn_sprinklers).time_remaining_active_valve().value_or(0) == 0
+        && id(lawn_sprinklers_run_time_remaining).state == "N/A";
+      terminal_condition: return !id(test_script).is_running();
+      validation_timeout: 45s

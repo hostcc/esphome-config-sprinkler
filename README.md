@@ -165,6 +165,22 @@ You can also remove certain portions of the configuration marked as `Optional`
 in [full.yaml](full.yaml) and [main.yaml](main.yaml) if you don't have particular
 hardware or need to use that functionality.
 
+## Integration tests
+
+Host-platform integration tests are available under [tests](tests) and are
+intended to verify this package's configuration logic, not ESPHome core
+component internals.
+
+Run all host integration scenarios locally:
+
+```bash
+pip install -r requirements.txt
+esphome run tests/host-integration-schedule-start.yaml
+esphome run tests/host-integration-refill-script.yaml
+esphome run tests/host-integration-runtime-remaining.yaml
+esphome run tests/host-integration-shutdown.yaml
+```
+
 ## Sample installation
 
 ![Installation overview](/docs/assets/controller-hw-overview.jpg)

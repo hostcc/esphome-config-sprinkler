@@ -30,3 +30,25 @@ jobs:
           python-version: '3.13'
       - run: pip install -r requirements.txt
       - run: esphome compile tests/rp2040w.yaml
+
+  e2e-tests:
+    name: Run integration tests on 'host' platform
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        testfile:
+          - tests/host-integration-schedule-start.yaml
+          - tests/host-integration-refill-script.yaml
+          - tests/host-integration-runtime-remaining.yaml
+          - tests/host-integration-shutdown.yaml
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+      - run: pip install -r requirements.txt
+      - name: Run test with '${{ matrix.testfile }}'
+        run: |
+          esphome run ${{ matrix.testfile }}
+        shell: bash
+        timeout-minutes: 2

@@ -1,0 +1,48 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Ilia Sotnikov
+---
+script:
+  - id: test_script
+    then:
+      - sprinkler.start_full_cycle: lawn_sprinklers
+      # Wait for sprinkler controller to start
+      - wait_until:
+          condition:
+            lambda: |-
+              return id(lawn_sprinklers).time_remaining_active_valve()
+                .value_or(0) > 0;
+          timeout: 5s
+      # Press shutdown button
+      - button.press: lawn_sprinklers_shutdown_button
+      # Wait for sprinkler controller to settle
+      - wait_until:
+          condition:
+            lambda: return !id(lawn_sprinklers_main_switch).state;
+          timeout: 5s
+      - delay: 1200ms
+
+packages:
+  setup: !include
+    file: base/test_setup.yaml
+    vars:
+      test_name: test-host-int-shutdown
+      run_duration_initial_value: '4'
+
+  perform: !include
+    file: base/test_perform.yaml
+    vars:
+      setup_script: test_script
+
+  validate: !include
+    file: base/test_validate.yaml
+    vars:
+      success_condition: >-
+        return !id(lawn_sprinklers_main_switch).state
+        && id(lawn_sprinklers).time_remaining_active_valve().value_or(0) == 0
+        && id(lawn_sprinklers_run_time_remaining).state == "N/A"
+        && !id(relay_1).state
+        && !id(relay_2).state
+        && !id(relay_3).state
+        && !id(relay_8).state;
+      terminal_condition: return !id(test_script).is_running();
+      validation_timeout: 15s

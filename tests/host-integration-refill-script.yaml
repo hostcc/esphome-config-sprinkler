@@ -1,0 +1,54 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Ilia Sotnikov
+---
+globals:
+  - id: refill_pulse_count
+    type: int
+    restore_value: no  # yamllint disable rule:truthy
+    initial_value: '0'
+
+switch:
+  - id: !extend relay_7
+    on_turn_on:
+      - lambda: |-
+          id(refill_pulse_count) += 1;
+
+script:
+  - id: test_script
+    then:
+      - switch.turn_off: disable_water_tank_refill
+      - switch.turn_on: water_tank_refill_after_each_valve
+      - switch.turn_on: lawn_south_enable_switch
+      # Execute the same action sequence used by scheduled on_time trigger.
+      - script.execute: lawn_sprinklers_scheduled_cycle_start
+      - wait_until:
+          condition:
+            lambda: return id(lawn_sprinklers_main_switch).state;
+          timeout: 5s
+      - wait_until:
+          condition:
+            lambda: return !id(lawn_sprinklers_main_switch).state;
+          timeout: 20s
+      - delay: 1s
+
+packages:
+  setup: !include
+    file: base/test_setup.yaml
+    vars:
+      test_name: test-host-int-refill
+      run_duration_initial_value: '1'
+      peripherals_power_refill_pulse_duration: 250ms
+
+  perform: !include
+    file: base/test_perform.yaml
+    vars:
+      setup_script: test_script
+
+  validate: !include
+    file: base/test_validate.yaml
+    vars:
+      success_condition: >-
+        return id(refill_pulse_count) >= 1
+        && !id(relay_7).state;
+      terminal_condition: return !id(test_script).is_running();
+      validation_timeout: 25s

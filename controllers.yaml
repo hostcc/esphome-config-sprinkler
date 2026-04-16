@@ -63,7 +63,9 @@ sprinkler:
               condition: >-
                 !id(disable_water_tank_refill).state
                 && id(water_tank_refill_after_each_valve).state
-        enable_switch: "Enable south lawn"
+        enable_switch:
+          name: "Enable south lawn"
+          id: lawn_south_enable_switch
         run_duration_number:
           name: "South lawn run duration"
           icon: "mdi:timer"
@@ -83,7 +85,9 @@ sprinkler:
               condition: >-
                 !id(disable_water_tank_refill).state
                 && id(water_tank_refill_after_each_valve).state
-        enable_switch: "Enable north lawn"
+        enable_switch:
+          name: "Enable north lawn"
+          id: lawn_north_enable_switch
         run_duration_number:
           name: "North lawn run duration"
           icon: "mdi:timer"
@@ -103,7 +107,9 @@ sprinkler:
               condition: >-
                 !id(disable_water_tank_refill).state
                 && id(water_tank_refill_after_each_valve).state
-        enable_switch: "Enable west lawn"
+        enable_switch:
+          name: "Enable west lawn"
+          id: lawn_west_enable_switch
         run_duration_number:
           name: "West lawn run duration"
           icon: "mdi:timer"
@@ -169,7 +175,9 @@ sprinkler:
               condition: >-
                 !id(disable_water_tank_refill).state
                 && id(water_tank_refill_after_each_valve).state
-        enable_switch: "Enable south flowerbed"
+        enable_switch:
+          name: "Enable south flowerbed"
+          id: flowerbed_south_enable_switch
         run_duration_number:
           name: "South flowerbed run duration"
           icon: "mdi:timer"
@@ -189,7 +197,9 @@ sprinkler:
               condition: >-
                 !id(disable_water_tank_refill).state
                 && id(water_tank_refill_after_each_valve).state
-        enable_switch: "Enable west flowerbed"
+        enable_switch:
+          name: "Enable west flowerbed"
+          id: flowerbed_west_enable_switch
         run_duration_number:
           name: "West flowerbed"
           icon: "mdi:timer"
@@ -267,6 +277,7 @@ switch:
 
 button:
   - platform: template
+    id: lawn_sprinklers_shutdown_button
     name: "Lawn sprinklers: shutdown"
     on_press:
       - lambda: !include
@@ -275,6 +286,7 @@ button:
             sprinkler: lawn_sprinklers
 
   - platform: template
+    id: flowerbed_sprinklers_shutdown_button
     name: "Flowerbed sprinklers: shutdown"
     on_press:
       - lambda: !include

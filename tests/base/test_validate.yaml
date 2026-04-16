@@ -1,0 +1,30 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Ilia Sotnikov
+---
+substitutions:
+  success_condition:
+  terminal_condition:
+  validation_timeout: 0s
+
+esphome:
+  on_boot:
+    - # Ensure validation script runs after other scripts
+      priority: -100
+      then:
+        - wait_until:
+            condition:
+              lambda: '${terminal_condition}'
+            timeout: ${validation_timeout}
+        - if:
+            condition:
+              lambda: '${success_condition}'
+            then:
+              - logger.log:
+                  format: TEST PASSED
+                  level: INFO
+              - lambda: exit(0);
+            else:
+              - logger.log:
+                  format: TEST FAILED
+                  level: ERROR
+              - lambda: exit(1);
