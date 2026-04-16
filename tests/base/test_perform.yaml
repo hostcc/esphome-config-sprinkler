@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Ilia Sotnikov
+---
+substitutions:
+  setup_script:
+
+esphome:
+  on_boot:
+    - # Ensure setup script runs before other scripts
+      priority: -100
+      then:
+        - script.execute: ${setup_script}

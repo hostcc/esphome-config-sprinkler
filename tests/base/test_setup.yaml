@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Ilia Sotnikov
+---
+substitutions:
+  test_name: test-host
+  rtc_id: homeassistant_time
+  run_duration_uom: s
+  run_duration_initial_value: '1'
+  valve_overlap: 0s
+  pump_start_pump_delay: 0s
+  pump_stop_valve_delay: 0s
+  peripherals_power_refill_pulse_duration: 250ms
+  scheduled_start_wait_tank_full_duration: 1s
+
+logger:
+  level: INFO
+
+esphome:
+  name: ${test_name}
+
+host:
+
+api:
+
+packages:
+  main: !include ../../main.yaml
