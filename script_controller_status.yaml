@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: Apache-1.0
 # Copyright (c) 2023 Ilia Sotnikov
 ---
-!lambda |-
-  #include <esphome/components/sprinkler/sprinkler.h>
-  #define PAUSED_STR "Paused: "
-  #define PAUSED_STR_LEN sizeof(PAUSED_STR) - 1
+|-
+  %:include <esphome/components/sprinkler/sprinkler.h>
+  %:define PAUSED_STR "Paused: "
+  %:define PAUSED_STR_LEN sizeof(PAUSED_STR) - 1
   auto paused_valve = id(${sprinkler}).paused_valve();
   if (paused_valve.has_value()) {
     auto paused_valve_name = id(${sprinkler}).valve_name(paused_valve.value());
