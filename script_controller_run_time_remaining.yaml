@@ -7,7 +7,7 @@
 
   if (time_remaining > 0) {
     auto remaining_hours = time_remaining / 3600;
-    auto remaining_minutes = time_remaining / 60;
+    auto remaining_minutes = (time_remaining % 3600) / 60;
     auto remaining_seconds = time_remaining % 60;
 
     return
