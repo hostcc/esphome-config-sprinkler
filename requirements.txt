@@ -1,2 +1,2 @@
-esphome==2026.5.2
+esphome==2026.5.3
 pillow==12.2.0
