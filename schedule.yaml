@@ -204,7 +204,7 @@ number:
     mode: box
 
 external_components:
-  - source: github://hostcc/esphome-component-dynamic-on-time@1.2.2
+  - source: github://hostcc/esphome-component-dynamic-on-time@2.0.0
 
 script:
   - id: lawn_sprinklers_scheduled_cycle_start
